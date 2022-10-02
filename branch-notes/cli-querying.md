@@ -1,12 +1,15 @@
 [ Changlog ]
-* Added cli interface for instance type and operating system
-* file generation of queryied ec2 instance details (including pricing)
+
+- Added cli interface for instance type and operating system
+- file generation of queryied ec2 instance details (including pricing)
 
 [ Usage ]
 Prereqs:
+
 - homebrew installed
 - node & typescript installed (via brew)
 - yarn installed (via brew)
 
-`yarn start:dev` 
+`yarn start:dev`
+
 - Will promt for `instance type` and `operating system` outputting the details in stdout (JSON format) and a .json file named output-[instanceType]-[operatingSystem].json

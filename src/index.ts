@@ -1,5 +1,5 @@
 import {
-    Filter,
+  Filter,
   GetProductsCommand,
   GetProductsCommandOutput,
   GetProductsRequest,
@@ -12,19 +12,27 @@ const fs = require("fs");
 
 let params: GetProductsRequest = {
   ServiceCode: "AmazonEC2",
-  Filters: [
-  ],
+  Filters: [],
 };
 const command = new GetProductsCommand(params);
 
 const updateFilters = (instanceType: string, operatingSystem: string) => {
-  let instanceTypeUpdate: Filter = { Field: "instanceType", Value: "", Type: "TERM_MATCH" }
-  let operatingSystemUpdate: Filter = { Field: "operatingSystem", Value: "", Type: "TERM_MATCH" }
+  let instanceTypeUpdate: Filter = {
+    Field: "instanceType",
+    Value: "",
+    Type: "TERM_MATCH",
+  };
+  let operatingSystemUpdate: Filter = {
+    Field: "operatingSystem",
+    Value: "",
+    Type: "TERM_MATCH",
+  };
 
-  instanceTypeUpdate.Value = (instanceType != "") ? instanceType : "t3.micro"
-  operatingSystemUpdate.Value = (operatingSystem != "") ? operatingSystem : "Linux"
-  
-  params.Filters = [ instanceTypeUpdate, operatingSystemUpdate ]
+  instanceTypeUpdate.Value = instanceType != "" ? instanceType : "t3.micro";
+  operatingSystemUpdate.Value =
+    operatingSystem != "" ? operatingSystem : "Linux";
+
+  params.Filters = [instanceTypeUpdate, operatingSystemUpdate];
 };
 
 const getPrices = async () => {
@@ -38,9 +46,7 @@ const getPrices = async () => {
       if (data.PriceList) {
         data.PriceList.forEach((product) => {
           const struct: Product = JSON.parse(product.toString());
-          console.log(
-            `${JSON.stringify(struct, null, 2)}`
-          );
+          console.log(`${JSON.stringify(struct, null, 2)}`);
         });
         writeBuffer += data.PriceList.toString();
       }
@@ -65,25 +71,28 @@ const getPrices = async () => {
   }
 };
 
-const readline = require('readline')
+const readline = require("readline");
 
 const rl = readline.createInterface({
   input: process.stdin,
-  output: process.stdout
-})
+  output: process.stdout,
+});
 
 const question = (question: string): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      rl.question(question, (answer: string) => {
-        resolve(answer)
-      })
-    })
-  }
+  return new Promise((resolve, reject) => {
+    rl.question(question, (answer: string) => {
+      resolve(answer);
+    });
+  });
+};
 
 (async () => {
-    const instanceType = await question('What Instance Type? (default. t3.micro): ');
-    const operatingSystem  = await question('What Operating System? (default. Linux): ');
-    updateFilters(instanceType, operatingSystem);
-    await getPrices();
+  const instanceType = await question(
+    "What Instance Type? (default. t3.micro): "
+  );
+  const operatingSystem = await question(
+    "What Operating System? (default. Linux): "
+  );
+  updateFilters(instanceType, operatingSystem);
+  await getPrices();
 })();
-
