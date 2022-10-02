@@ -1,0 +1,36 @@
+{
+  "name": "cloudboyz",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "rimraf ./build && tsc",
+    "start:dev": "nodemon",
+    "start": "npm run build && node build/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nia-vf/cloudboyz.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nia-vf/cloudboyz/issues"
+  },
+  "homepage": "https://github.com/nia-vf/cloudboyz#readme",
+  "devDependencies": {
+    "@types/node": "^18.7.23",
+    "nodemon": "^2.0.20",
+    "prettier": "2.7.1",
+    "rimraf": "^3.0.2",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.8.4"
+  },
+  "dependencies": {
+    "@aws-sdk/client-pricing": "^3.181.0",
+    "aws-sdk": "^2.1227.0",
+    "save-dev": "^0.0.1-security"
+  }
+}
