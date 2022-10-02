@@ -1,30 +1,33 @@
-import { OfferIndex } from "./interfaces/offer-index";
+import { GetProductsCommand, GetProductsCommandOutput, GetProductsRequest, PricingClient } from "@aws-sdk/client-pricing";
 
-console.log("AWS Price API POC!");
-const offerIndexURL =
-  "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/index.json";
+const client = new PricingClient({ region: "us-east-1" });
+const fs = require('fs')
 
-const getOfferIndexFile = async (): Promise<OfferIndex> => {
-  const response = await fetch(offerIndexURL);
-  return await response.json();
+const params: GetProductsRequest = {
+    ServiceCode: "AmazonEC2"
 };
+const command = new GetProductsCommand(params);
 
-const logOfferIndexFile = async () => {
+
+const getPrices = async () => {
+    console.log("Console logging DescribeServicesCommand client.send")
   try {
-    const text = await getOfferIndexFile();
-    console.log(text);
-  } catch (e) {
-    console.log("Error retrieving Index File");
-    console.error(e);
+    const data: GetProductsCommandOutput = await client.send(command);
+    if (data.PriceList) {
+        data.PriceList.forEach(item => {
+            console.log(JSON.parse(item.toString()))
+        })
+        fs.writeFile('Output.txt', data.PriceList.toString(), (err: Error) => {
+      
+            // In case of a error throw err.
+            if (err) throw err;
+        })
+    }
+  } catch (error) {
+    console.log(error)
   }
 };
 
-const getOfferDetailsForService = async (service: string) => {
-  console.log(`Getting Offer details for service ... ${service}`);
-  const file = await getOfferIndexFile();
-  console.log(file.offers[service]);
-};
-
 (async () => {
-  await getOfferDetailsForService("AmazonLightsail");
+    await getPrices();
 })();
