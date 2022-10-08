@@ -33,7 +33,6 @@
   },
   "dependencies": {
     "@aws-sdk/client-pricing": "^3.181.0",
-    "@types/rewire": "^2.5.28",
     "aws-sdk": "^2.1227.0",
     "save-dev": "^0.0.1-security"
   }
