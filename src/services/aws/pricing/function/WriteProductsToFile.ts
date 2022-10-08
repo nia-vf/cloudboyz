@@ -1,35 +1,32 @@
 import { Product } from "../../../../interfaces/product";
-const fs = require('fs');
+import * as fs from "fs";
+
+const getOutputDir = (dir?: string) => (dir ? "./" + dir : "./output");
+
+const getFileName = (outputDir: string, filename?: string) =>
+  outputDir + "/" + (filename ? filename : `${Date.now()}.json`);
 
 export const writeProductsToFile = (
-  filtersMap: Map<string, string>,
-  products: Product[]
+  products: Product[],
+  outputDirectory?: string,
+  fileName?: string
 ) => {
-  let filterString = "";
-  filtersMap.forEach((value, key) => {
-    filterString = filterString.concat(`-${value}`);
-  });
+  const outputDir = getOutputDir(outputDirectory);
+  const filename = getFileName(outputDir, fileName);
 
-  const filename = `output/${Date.now()}${filterString}.json`
-
-  const outputDir = "./output";
   // check if directory exists and create if not.
   if (fs.existsSync(outputDir)) {
     console.log("Output directory exists!");
   } else {
     console.log("Ouput directory not found.\nCreating ...");
-    fs.mkdirSync(outputDir)
+    fs.mkdirSync(outputDir);
     console.log("Ouput directory created!");
   }
 
   console.log(`Creating output file ${filename}`);
-  fs.appendFile(
-    filename,
-    JSON.stringify(products, null, 2),
-    (e: Error) => {
-      // In case of a error throw err.
-      if (e) throw e;
-    }
-  );
+  fs.writeFile(filename, JSON.stringify(products, null, 2), (e) => {
+    // In case of a error throw err.
+    if (e) throw e;
+  });
   console.log(`${filename} created successfully!`);
 };

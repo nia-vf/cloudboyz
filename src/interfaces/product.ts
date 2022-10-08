@@ -1,6 +1,6 @@
 export interface Product {
   product?: {
-    productFamily?: string;
+    productFamily?: int;
     attributes?: {
       enhancedNetworkingSupported?: string;
       intelTurboAvailable?: string;
@@ -61,8 +61,8 @@ interface PriceDimension {
   unit?: string;
   endRange?: string;
   description?: string;
-  appliesTo?: string;
-  rateCode?: string[];
+  appliesTo?: never[];
+  rateCode?: string;
   beginRange?: string;
   pricePerUnit?: { [key: string]: string };
 }
