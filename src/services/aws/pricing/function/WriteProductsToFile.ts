@@ -30,4 +30,3 @@ export const writeProductsToFile = (
   });
   console.log(`${filename} created successfully!`);
 };
-

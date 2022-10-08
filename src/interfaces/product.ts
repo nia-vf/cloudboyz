@@ -1,5 +1,5 @@
 export interface Product {
-  product?: {
+  product: {
     productFamily?: string;
     attributes?: {
       enhancedNetworkingSupported?: string;
@@ -61,8 +61,8 @@ interface PriceDimension {
   unit?: string;
   endRange?: string;
   description?: string;
-  appliesTo?: string;
-  rateCode?: string[];
+  appliesTo?: never[];
+  rateCode?: string;
   beginRange?: string;
   pricePerUnit?: { [key: string]: string };
 }
