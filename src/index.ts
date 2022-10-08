@@ -24,7 +24,7 @@ const question = (question: string): Promise<string> => {
   );
   const filtersMap = new Map<string, string>([
     ["instanceType", instanceType != "" ? instanceType : "t3.micro"],
-    ["operatingSystem", operatingSystem!= "" ? operatingSystem : "Linux"],
+    ["operatingSystem", operatingSystem != "" ? operatingSystem : "Linux"],
   ]);
   const products = await getProducts(filtersMap);
   writeProductsToFile(filtersMap,products)
