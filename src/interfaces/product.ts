@@ -1,5 +1,5 @@
 export interface Product {
-  product: {
+  product?: {
     productFamily?: string;
     attributes?: {
       enhancedNetworkingSupported?: string;
