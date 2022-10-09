@@ -1,4 +1,9 @@
-import { getProducts, writeProductsToFile } from "./services/aws/pricing";
+import {
+  writeProductsToFile,
+  PricingAPI,
+  client,
+  getProducts,
+} from "./services/aws/pricing";
 
 const readline = require("readline");
 
@@ -26,6 +31,20 @@ const question = (question: string): Promise<string> => {
     ["instanceType", instanceType != "" ? instanceType : "t3.micro"],
     ["operatingSystem", operatingSystem != "" ? operatingSystem : "Linux"],
   ]);
-  const products = await getProducts(filtersMap);
-  writeProductsToFile(products)
+
+  // class instance of PricingAPI now available with configurable defaults
+  const pricingApi = new PricingAPI({ region: "us-east-1", maxAttempts: 2 });
+
+  // can call custom functions which use the pricingAPI directly
+  const products = await pricingApi.getProducts(filtersMap);
+
+  // can call pricingApi class functions directly and pass in the default `client`
+  const productsUsingFunctionAndDefaultClient = await getProducts(
+    filtersMap,
+    client
+  );
+
+  // some functions are seperate from the api client but part of the pricing service
+  // and so can be called directly from the service/aws/pricing library
+  writeProductsToFile(products);
 })();
