@@ -30,7 +30,7 @@ export const getProducts = async (filtersMap: Map<string, string> ): Promise<Pro
   let products: Product[] = []
   try {
     let data: GetProductsCommandOutput = await client.send(command);
-    while (data.NextToken) {
+    do {
       if (data.PriceList) {
         data.PriceList.forEach((product) => {
           const productStruct: Product = JSON.parse(product.toString());
@@ -40,7 +40,7 @@ export const getProducts = async (filtersMap: Map<string, string> ): Promise<Pro
       }
       params.NextToken = data.NextToken;
       data = await client.send(command);
-    }
+    } while (data.NextToken) 
     console.log("Complete!")
     return products;
   } catch (e) {

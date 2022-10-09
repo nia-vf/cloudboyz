@@ -8,5 +8,12 @@ test('function `writeProductsToFile` writes stringified Product object array to 
   const fullPath = `./${testOutputDir}/${fileName}`
   writeProductsToFile(productsArrayMock,testOutputDir,fileName)
   expect(fs.existsSync(fullPath)).toBe(true);
-  fs.rmdirSync(testOutputDir, { recursive: true })
+  fs.rm(testOutputDir, { recursive: true }, (err) => { 
+    if (err) { 
+      console.error(err);
+    } 
+    else { 
+      console.log("Non Recursive: Directory Deleted!"); 
+    } 
+  }); 
 });
