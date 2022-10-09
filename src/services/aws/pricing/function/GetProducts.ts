@@ -39,7 +39,7 @@ export const getProducts = async (
         data.PriceList.forEach((product) => {
           const productStruct: Product = JSON.parse(product.toString());
           products = [productStruct, ...products];
-          //console.log(`${JSON.stringify(productStruct.product, null, 2)}`);
+          console.log(`${JSON.stringify(productStruct.product, null, 2)}`);
         });
       }
       params.NextToken = data.NextToken;
