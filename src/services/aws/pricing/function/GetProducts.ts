@@ -5,6 +5,7 @@ import {
   GetProductsRequest,
   PricingClient,
 } from "@aws-sdk/client-pricing";
+import { client } from "..";
 import { Product } from "../../../../interfaces/product";
 
 const createFilters = (filtersMap: Map<string, string>) => {
@@ -22,7 +23,7 @@ const createFilters = (filtersMap: Map<string, string>) => {
 
 export const getProducts = async (
   filtersMap: Map<string, string>,
-  client: PricingClient,
+  priceClient: PricingClient = client,
 ): Promise<Product[]> => {
   const filters = createFilters(filtersMap);
   let params: GetProductsRequest = {
@@ -32,17 +33,17 @@ export const getProducts = async (
   let command = new GetProductsCommand(params);
   let products: Product[] = [];
   try {
-    let data: GetProductsCommandOutput = await client.send(command);
+    let data: GetProductsCommandOutput = await priceClient.send(command);
     do {
       if (data.PriceList) {
         data.PriceList.forEach((product) => {
           const productStruct: Product = JSON.parse(product.toString());
           products = [productStruct, ...products];
-          console.log(`${JSON.stringify(productStruct.product, null, 2)}`);
+          //console.log(`${JSON.stringify(productStruct.product, null, 2)}`);
         });
       }
       params.NextToken = data.NextToken;
-      data = await client.send(command);
+      data = await priceClient.send(command);
     } while (data.NextToken);
     console.log("Complete!");
     return products;

@@ -1,7 +1,6 @@
 import {
   writeProductsToFile,
   PricingAPI,
-  client,
   getProducts,
 } from "./services/aws/pricing";
 
@@ -38,10 +37,9 @@ const question = (question: string): Promise<string> => {
   // can call custom functions which use the pricingAPI directly
   const products = await pricingApi.getProducts(filtersMap);
 
-  // can call pricingApi class functions directly and pass in the default `client`
+  // can call pricingApi class functions directly and it use the default client
   const productsUsingFunctionAndDefaultClient = await getProducts(
-    filtersMap,
-    client
+    filtersMap
   );
 
   // some functions are seperate from the api client but part of the pricing service
