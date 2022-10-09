@@ -43,6 +43,6 @@ const question = (question: string): Promise<string> => {
   );
 
   // some functions are seperate from the api client but part of the pricing service
-  // and so can be called directly from the service/aws/pricing library
+  // and so are called directly from the service/aws/pricing library
   writeProductsToFile(products);
 })();
