@@ -27,5 +27,5 @@ const question = (question: string): Promise<string> => {
     ["operatingSystem", operatingSystem != "" ? operatingSystem : "Linux"],
   ]);
   const products = await getProducts(filtersMap);
-  writeProductsToFile(filtersMap,products)
+  writeProductsToFile(products)
 })();
