@@ -1,16 +1,16 @@
 module.exports = {
-  preset: 'ts-jest',
-  testEnvironment: 'node',
+  preset: "ts-jest",
+  testEnvironment: "node",
   transform: {
-    '^.+\\.ts?$': 'ts-jest',
+    "^.+\\.ts?$": "ts-jest",
   },
-  transformIgnorePatterns: ['<rootDir>/node_modules/'],
+  transformIgnorePatterns: ["<rootDir>/node_modules/"],
   collectCoverage: true,
-    collectCoverageFrom: ["./src/interfaces/**", "./src/services/**"],
-    coverageThreshold: {
-      global: {
-        lines: 90,
-        statements: 90,
-      }
-    }
+  collectCoverageFrom: ["./src/interfaces/**", "./src/services/**"],
+  coverageThreshold: {
+    global: {
+      lines: 90,
+      statements: 90,
+    },
+  },
 };

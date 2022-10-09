@@ -3,6 +3,15 @@ name: Tests CI
 on: [push, pull_request]
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Test using Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: "18"
+      - run: yarn lint
   test:
     runs-on: ubuntu-latest
     steps:
@@ -10,6 +19,6 @@ jobs:
       - name: Test using Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: '18'
+          node-version: "18"
       - run: yarn install
       - run: yarn test

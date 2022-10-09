@@ -23,7 +23,7 @@ const createFilters = (filtersMap: Map<string, string>) => {
 
 export const getProducts = async (
   filtersMap: Map<string, string>,
-  priceClient: PricingClient = client,
+  priceClient: PricingClient = client
 ): Promise<Product[]> => {
   const filters = createFilters(filtersMap);
   let params: GetProductsRequest = {
