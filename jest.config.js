@@ -4,7 +4,7 @@ module.exports = {
   transform: {
     '^.+\\.ts?$': 'ts-jest',
   },
-  transformIgnorePatterns: ['<rootDir>/node_modules/'],
+  //transformIgnorePatterns: ['<rootDir>/node_modules/'],
   collectCoverage: true,
     //collectCoverageFrom: ["./src/interfaces/**", "./src/services/**"],
     coverageThreshold: {
