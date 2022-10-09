@@ -24,9 +24,6 @@ export const writeProductsToFile = (
   }
 
   console.log(`Creating output file ${filename}`);
-  fs.writeFile(filename, JSON.stringify(products, null, 2), (e) => {
-    // In case of a error throw err.
-    if (e) throw e;
-  });
+  fs.writeFileSync(filename, JSON.stringify(products, null, 2));
   console.log(`${filename} created successfully!`);
 };
