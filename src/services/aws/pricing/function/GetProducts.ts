@@ -48,7 +48,12 @@ export const getProducts = async (
       //console.log(`${JSON.stringify(productStruct.product, null, 2)}`);
     });
   }
-  console.log(`Total products found for ${Array.from(filtersMap).flatMap((v,k) => `${v[0]}:${v[1]}`).toString().replace(","," ")} => ${total}`)
+  console.log(
+    `Total products found for ${Array.from(filtersMap)
+      .flatMap((v, k) => `${v[0]}:${v[1]}`)
+      .toString()
+      .replace(",", " ")} => ${total}`
+  );
   console.log("Complete!");
   return products;
 };
