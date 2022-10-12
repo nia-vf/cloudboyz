@@ -38,7 +38,7 @@ const question = (question: string): Promise<string> => {
   const products = await pricingApi.getProducts(filtersMap);
 
   // can call pricingApi class functions directly and it use the default client
-  const productsUsingFunctionAndDefaultClient = await getProducts(filtersMap);
+  // const productsUsingFunctionAndDefaultClient = await getProducts(filtersMap);
 
   // some functions are seperate from the api client but part of the pricing service
   // and so are called directly from the service/aws/pricing library
