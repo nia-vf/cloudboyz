@@ -1,8 +1,8 @@
 module "lambda_function" {
   source = "terraform-aws-modules/lambda/aws"
 
-  function_name = "my-lambda1"
-  description   = "My awesome lambda function"
+  function_name = "serverless-pricing-api"
+  description   = "Proof of concept for a serverless lambda to retrieve formatted api responses utilizing the client-pricing sdk"
   handler       = "index.handler"
   runtime       = "nodejs16.x"
 
@@ -21,6 +21,6 @@ module "lambda_function" {
   }
 
   tags = {
-    Name = "my-lambda1"
+    Name = "serverless-pricing"
   }
 }
