@@ -8,6 +8,7 @@
     "start": "npm run build && node build/index.js",
     "test": "jest --silent --coverage",
     "lint": "npx prettier --check .",
+    "lint-fix": "npx prettier --write .",
     "prebuild": "rm -rf dist",
     "build": "esbuild ./src/lambdas/serverless-pricing/handler.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/index.js && cd dist && zip -r index.zip index.js*",
     "postbuild": "cd dist && zip -r index.zip index.js*"
