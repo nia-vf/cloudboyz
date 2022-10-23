@@ -1,98 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>WEATHER API HOMEPAGE</title>
+  </head>
 
-</head>
-
-<body>
-    <h3> Get Weather Forecast for Next 7 Days </h3>
+  <body>
+    <h3>Get Weather Forecast for Next 7 Days</h3>
     <form>
-        <label for="location_input">Enter Location e.g., 'London':</label><br>
-        <input type="text" id="location_input" name="location" /><br>
-        <label for="unit_type_input">Enter Unit Type e.g., 'metric':</label><br>
-        <input type="text" id="unit_type_input" name="unitGroup" /><br>
-        <label for="include_hours_input">Include Hours?:</label><br>
-        <select id="include_hours_input" name="include">
-            <option value="yes">Yes</option>
-            <option value="no">No</option>
-          </select><br><br>
-        <button id="submit"> Get Weather Data </button>
+      <label for="location_input">Enter Location e.g., 'London':</label><br />
+      <input type="text" id="location_input" name="location" /><br />
+      <label for="unit_type_input">Enter Unit Type e.g., 'metric':</label><br />
+      <input type="text" id="unit_type_input" name="unitGroup" /><br />
+      <label for="include_hours_input">Include Hours?:</label><br />
+      <select id="include_hours_input" name="include">
+        <option value="yes">Yes</option>
+        <option value="no">No</option></select
+      ><br /><br />
+      <button id="submit">Get Weather Data</button>
     </form>
-    <h3> Weather Forecast - Next 7 Days </h3>
+    <h3>Weather Forecast - Next 7 Days</h3>
 
     <div id="response_api">
-        <table id="response_table">
-        </table>
+      <table id="response_table"></table>
     </div>
     <script>
-        const submit_button = document.getElementById("submit")
+      const submit_button = document.getElementById("submit");
 
-        var url = " https://ivikocphja.execute-api.us-east-1.amazonaws.com/prod/forecast-data?"
+      var url =
+        " https://ivikocphja.execute-api.us-east-1.amazonaws.com/prod/forecast-data?";
 
-        submit_button.addEventListener('click', get_weather_data)
+      submit_button.addEventListener("click", get_weather_data);
 
-        async function get_weather_data(e) {
-            e.preventDefault() //prevent page from refreshing
-                //Refresh table (if called before)
-            document.getElementById("response_table").innerHTML = ""
+      async function get_weather_data(e) {
+        e.preventDefault(); //prevent page from refreshing
+        //Refresh table (if called before)
+        document.getElementById("response_table").innerHTML = "";
 
-            var param_location = "location=" + document.getElementById("location_input").value
-            var param_unit_group = "&unitGroup=" + document.getElementById("unit_type_input").value
-            var param_include = "&include=" + document.getElementById("include_hours_input").value
-            if (param_location == '' || param_unit_group == '') {
-                return
-            }
-
-            //Call API Gateway
-            const response = await fetch(url + param_location + param_unit_group + param_include, {
-                method: 'GET'
-            })
-            const data = await response.json()
-
-            //Construct Table
-            //Get Table ID
-            document.getElementById("response_table").innerHTML = "<tr><th>Date</th><th>Time</th><th>Temperature (Celsius)</th><th>Precipitation</th><th>Humidity</th><th>Feels Like</th></tr>"
-            var table = document.getElementById("response_table")
-                //Cycle through JSON data
-            for (i = 1; i < data.body.length; i++) {
-                var row = document.createElement("tr")
-                var day = data.body[i]
-
-                var table_data = document.createElement("td")
-                table_data.innerHTML = day.date
-                row.appendChild(table_data)
-
-                var table_data = document.createElement("td")
-                table_data.innerHTML = day.time
-                row.appendChild(table_data)
-
-                var table_data = document.createElement("td")
-                table_data.innerHTML = day.temperature
-                row.appendChild(table_data)
-
-                var table_data = document.createElement("td")
-                table_data.innerHTML = day.precipitation
-                row.appendChild(table_data)
-
-                var table_data = document.createElement("td")
-                table_data.innerHTML = day.humidity
-                row.appendChild(table_data)
-
-                var table_data = document.createElement("td")
-                table_data.innerHTML = day.feelsLike
-                row.appendChild(table_data)
-
-                table.appendChild(row)
-            }
-            //document.getElementById("response_table_data_1").innerHTML = JSON.stringify(data.body)
-            //document.getElementById("response_table_data_2").innerHTML = JSON.stringify(data.body)    
+        var param_location =
+          "location=" + document.getElementById("location_input").value;
+        var param_unit_group =
+          "&unitGroup=" + document.getElementById("unit_type_input").value;
+        var param_include =
+          "&include=" + document.getElementById("include_hours_input").value;
+        if (param_location == "" || param_unit_group == "") {
+          return;
         }
-    </script>
-</body>
 
+        //Call API Gateway
+        const response = await fetch(
+          url + param_location + param_unit_group + param_include,
+          {
+            method: "GET",
+          }
+        );
+        const data = await response.json();
+
+        //Construct Table
+        //Get Table ID
+        document.getElementById("response_table").innerHTML =
+          "<tr><th>Date</th><th>Time</th><th>Temperature (Celsius)</th><th>Precipitation</th><th>Humidity</th><th>Feels Like</th></tr>";
+        var table = document.getElementById("response_table");
+        //Cycle through JSON data
+        for (i = 1; i < data.body.length; i++) {
+          var row = document.createElement("tr");
+          var day = data.body[i];
+
+          var table_data = document.createElement("td");
+          table_data.innerHTML = day.date;
+          row.appendChild(table_data);
+
+          var table_data = document.createElement("td");
+          table_data.innerHTML = day.time;
+          row.appendChild(table_data);
+
+          var table_data = document.createElement("td");
+          table_data.innerHTML = day.temperature;
+          row.appendChild(table_data);
+
+          var table_data = document.createElement("td");
+          table_data.innerHTML = day.precipitation;
+          row.appendChild(table_data);
+
+          var table_data = document.createElement("td");
+          table_data.innerHTML = day.humidity;
+          row.appendChild(table_data);
+
+          var table_data = document.createElement("td");
+          table_data.innerHTML = day.feelsLike;
+          row.appendChild(table_data);
+
+          table.appendChild(row);
+        }
+        //document.getElementById("response_table_data_1").innerHTML = JSON.stringify(data.body)
+        //document.getElementById("response_table_data_2").innerHTML = JSON.stringify(data.body)
+      }
+    </script>
+  </body>
 </html>

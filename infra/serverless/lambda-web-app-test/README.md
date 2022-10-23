@@ -6,9 +6,9 @@ This folder contains the infrastructure and application code for a simple applic
 
 This is an application that allows users to retrieve weather forecast data via their browser. It consists of a front-end UI (client-side), and a backend using a function exposed via an API (server-side). Parameters entered by the user are passed from the front-end, to the function in the backend, which then calls an API to retrieve the weather forecast data based on the user's inputs.
 
-The client side part of the application should sit on S3. The server side of the application sits on Lambda, exposed via API Gateway. The client-side part of the application uses the API Gateway endpoint to interact with the server-side part of the application. 
+The client side part of the application should sit on S3. The server side of the application sits on Lambda, exposed via API Gateway. The client-side part of the application uses the API Gateway endpoint to interact with the server-side part of the application.
 
-Seeing as the front end (client side) contains JavaScript that manipulates data from the backend (server side) with another origin, this example application must support Cross-Origin Resource Sharing (CORS). Refer to the terraform script `main.tf` to see how the API Gateway infrastructure is set up to support CORS. 
+Seeing as the front end (client side) contains JavaScript that manipulates data from the backend (server side) with another origin, this example application must support Cross-Origin Resource Sharing (CORS). Refer to the terraform script `main.tf` to see how the API Gateway infrastructure is set up to support CORS.
 
 ## What this folder includes
 
@@ -18,7 +18,7 @@ Seeing as the front end (client side) contains JavaScript that manipulates data 
 
 ### Application
 
-- A Zip file that includes the Node.js files required for the application run on the Lambda function 
+- A Zip file that includes the Node.js files required for the application run on the Lambda function
 - A client-side script written in html to be stored in S3 (or can be ran from local machine) to create the UI in the Browser for the user to interact with.
 
 ## Important notes for running this application
