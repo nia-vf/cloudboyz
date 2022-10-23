@@ -23,4 +23,4 @@ Seeing as the front end (client side) contains JavaScript that manipulates data 
 
 ## Important notes for running this application
 
-On Line 35 of the index.html file a variable for the API Gateway endpoint base URL is declared. This should be updated to the new API Gateway endpoint that is created via Terraform.
+On Line 35 of the `index.html` file a variable for the API Gateway endpoint base URL is declared. This should be updated to the new API Gateway endpoint that is created via Terraform.
