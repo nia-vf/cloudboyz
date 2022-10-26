@@ -2,7 +2,7 @@ To run this locally you'll need:
 
 - to be configured with AWS (Can use the aws cli commands via a user or your own credentials)
 
-Command to package the lambda function AND run terraform to deploy the lambda and it's required infrastructure on AWS:
+Command to package the lambda function AND run terraform to deploy the lambda and its required infrastructure on AWS:
 
 ```
 // This command wraps several other command which do the following:
