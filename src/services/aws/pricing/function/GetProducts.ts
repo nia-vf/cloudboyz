@@ -1,12 +1,10 @@
 import {
   Filter,
   GetProductsCommand,
-  GetProductsCommandOutput,
   GetProductsRequest,
   PricingClient,
   paginateGetProducts,
   PricingPaginationConfiguration,
-  Pricing,
 } from "@aws-sdk/client-pricing";
 import { client } from "..";
 import { Product } from "../../../../interfaces/product";

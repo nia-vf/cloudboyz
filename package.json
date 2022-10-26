@@ -4,11 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "rimraf ./build && tsc",
     "start:dev": "nodemon",
     "start": "npm run build && node build/index.js",
     "test": "jest --silent --coverage",
-    "lint": "npx prettier --check ."
+    "lint": "npx prettier --check .",
+    "lint-fix": "npx prettier --write .",
+    "prebuild": "rm -rf dist",
+    "build": "esbuild ./src/lambdas/serverless-pricing/handler.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/index.js && cd dist && zip -r index.zip index.js*",
+    "postbuild": "cd dist && zip -r index.zip index.js*",
+    "full-release": "npm run build && cd infra/serverless && terraform apply"
   },
   "repository": {
     "type": "git",
@@ -22,6 +26,7 @@
   },
   "homepage": "https://github.com/nia-vf/cloudboyz#readme",
   "devDependencies": {
+    "@types/aws-lambda": "^8.10.107",
     "@types/jest": "^29.1.2",
     "@types/node": "^18.7.23",
     "jest": "^29.1.2",
@@ -34,7 +39,9 @@
   },
   "dependencies": {
     "@aws-sdk/client-pricing": "^3.181.0",
+    "aws-lambda": "^1.0.7",
     "aws-sdk": "^2.1227.0",
+    "esbuild": "^0.15.11",
     "save-dev": "^0.0.1-security"
   }
 }

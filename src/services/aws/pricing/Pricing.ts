@@ -1,7 +1,6 @@
 import { PricingClient, PricingClientConfig } from "@aws-sdk/client-pricing";
 import { Product } from "../../../interfaces/product";
 import { getProducts } from "./function/GetProducts";
-import { writeProductsToFile } from "./function/WriteProductsToFile";
 
 export class PricingAPI {
   private client: PricingClient;
