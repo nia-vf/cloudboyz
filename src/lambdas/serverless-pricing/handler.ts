@@ -1,5 +1,7 @@
 import { Context } from "aws-lambda";
+import { Product } from "../../interfaces/product";
 import { PricingAPI } from "../../services/aws/pricing";
+import _ from "lodash"
 
 // Commented out as using an alternative inferface/type for events
 // interface Query {
@@ -20,6 +22,54 @@ interface Response {
   onDemandKey?: string;
   priceDimensionKey?: string;
   pricePerUnit?: string;
+}
+
+const lodashUnderscoreImplementation = (pricingResponseArray: Product[]): Response[] => {
+  let pricingResponses: Response[] = [];
+  _.each(pricingResponseArray, response => {
+    let res: Response = {};
+    res.instanceType = response.product?.attributes?.instanceType;
+    res.location = response.product?.attributes?.location;
+    for (const [onDemandKey, onDemandValue] of _.entries(response.terms?.OnDemand)) {
+      for (const [priceDimensionKey, priceDimensionValue] of _.entries(onDemandValue.priceDimensions)) {
+        res.onDemandKey = onDemandKey;
+        res.priceDimensionKey = priceDimensionKey;
+        res.pricePerUnit = priceDimensionValue.pricePerUnit?.USD;
+    }
+    pricingResponses = [...pricingResponses, res];
+  }})
+  return pricingResponses
+}
+
+const forEachImplementation = (pricingResponseArray: Product[]): Response[] => {
+  let pricingResponses: Response[] = [];
+
+  pricingResponseArray.forEach((response) => {
+    // for each response build up a single Response interface object to store in pricingResponses array
+    let res: Response = {};
+    if (response.product?.attributes) {
+      res.instanceType = response.product.attributes.instanceType;
+      res.location = response.product.attributes.location;
+      if (response.terms?.OnDemand) {
+        for (const [onDemandKey, onDemandValue] of Object.entries(
+          response.terms?.OnDemand
+        )) {
+          if (onDemandValue.priceDimensions) {
+            for (const [
+              priceDimensionKey,
+              priceDimensionValue,
+            ] of Object.entries(onDemandValue.priceDimensions)) {
+              res.onDemandKey = onDemandKey;
+              res.priceDimensionKey = priceDimensionKey;
+              res.pricePerUnit = priceDimensionValue.pricePerUnit?.USD;
+            }
+          }
+        }
+      }
+      pricingResponses = [...pricingResponses, res];
+    }
+  });
+  return pricingResponses
 }
 
 exports.handler = async function (event: Event, context: Context) {
@@ -52,33 +102,7 @@ exports.handler = async function (event: Event, context: Context) {
     pricePerUnit: '0.0886000000'
   }]
   */
-  let pricingResponses: Response[] = [];
-
-  pricingResponseArray.forEach((response) => {
-    // for each response build up a single Response interface object to store in pricingResponses array
-    let res: Response = {};
-    if (response.product?.attributes) {
-      res.instanceType = response.product.attributes.instanceType;
-      res.location = response.product.attributes.location;
-      pricingResponses = [...pricingResponses, res];
-      if (response.terms?.OnDemand) {
-        for (const [onDemandKey, onDemandValue] of Object.entries(
-          response.terms?.OnDemand
-        )) {
-          if (onDemandValue.priceDimensions) {
-            for (const [
-              priceDimensionKey,
-              priceDimensionValue,
-            ] of Object.entries(onDemandValue.priceDimensions)) {
-              res.onDemandKey = onDemandKey;
-              res.priceDimensionKey = priceDimensionKey;
-              res.pricePerUnit = priceDimensionValue.pricePerUnit?.USD;
-            }
-          }
-        }
-      }
-    }
-  });
+  let pricingResponses = lodashUnderscoreImplementation(pricingResponseArray)
 
   // final log out of pricingResponses array
   console.log("Responses:", pricingResponses);
@@ -92,4 +116,4 @@ const event: Event = {
 
 // Explicit call of handler. Uncomment when developing locally
 // and run `ts-node src/lambdas/serverless-pricing/handler.ts` to test code in handler
-// exports.handler(event)
+exports.handler(event)
