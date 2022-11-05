@@ -39,13 +39,11 @@
   },
   "dependencies": {
     "@aws-sdk/client-pricing": "^3.181.0",
-    "@types/underscore": "^1.11.4",
     "aws-lambda": "^1.0.7",
     "aws-sdk": "^2.1227.0",
     "esbuild": "^0.15.11",
     "ipz": "^1.1.2",
     "save-dev": "^0.0.1-security",
-    "underscore": "^1.13.6",
     "zip": "^1.2.0"
   }
 }
