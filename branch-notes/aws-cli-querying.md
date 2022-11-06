@@ -1,7 +1,7 @@
 [ Changelog ]
 
 - Added cli interface for instance type and operating system
-- file generation of queried ec2 instance details (including pricing)
+- File generation of queried ec2 instance details (including pricing)
 
 [ Usage ]
 Prereqs:
