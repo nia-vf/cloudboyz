@@ -84,8 +84,12 @@ exports.handler = async function (event: Event, context: Context) {
 
   // final log out of pricingResponses array
   console.log("Responses:", pricingResponses);
-};
 
+  const response = {
+    body: pricingResponses,
+  };
+  return response;
+};
 // Dummy event
 // const event: Event = {
 //   region: "eu-west-2",
