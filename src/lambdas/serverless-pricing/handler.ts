@@ -19,8 +19,9 @@ interface Event {
 interface Response {
   instanceType?: string;
   location?: string;
-  onDemandKey?: string;
-  priceDimensionKey?: string;
+  sku?: string;
+  offerTermCode?: string;
+  priceRateCode?: string;
   pricePerUnit?: string;
 }
 
@@ -32,14 +33,15 @@ const lodashUnderscoreImplementation = (
     let res: Response = {};
     res.instanceType = response.product?.attributes?.instanceType;
     res.location = response.product?.attributes?.location;
+    res.sku = response.product?.sku;
     for (const [onDemandKey, onDemandValue] of _.entries(
       response.terms?.OnDemand
     )) {
       for (const [priceDimensionKey, priceDimensionValue] of _.entries(
         onDemandValue.priceDimensions
       )) {
-        res.onDemandKey = onDemandKey;
-        res.priceDimensionKey = priceDimensionKey;
+        res.offerTermCode = onDemandKey;
+        res.priceRateCode = priceDimensionKey;
         res.pricePerUnit = priceDimensionValue.pricePerUnit?.USD;
       }
       pricingResponses = [...pricingResponses, res];
