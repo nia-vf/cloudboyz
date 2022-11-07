@@ -31,13 +31,33 @@ module "lambda_function" {
 }
 
 #Lambda IAM Permissions for API Gateway
+data "aws_caller_identity" "current" {}
+
+locals {
+  account_id = data.aws_caller_identity.current.account_id
+}
+
+output "account_id" {
+  value = local.account_id
+}
+
+data "aws_region" "current" {}
+
+locals {
+  region = data.aws_region.current.name
+}
+
+output "region" {
+  value = local.region
+}
+
 resource "aws_lambda_permission" "pricing_agw_perm" {
   statement_id  = "AllowExecutionFromAPIGateway"
   action        = "lambda:InvokeFunction"
   function_name = module.lambda_function.lambda_function_name
   principal     = "apigateway.amazonaws.com"
 
-  source_arn = "arn:aws:execute-api:${var.my_region}:${var.account_id}:${aws_api_gateway_rest_api.pricing_agw.id}/*/${aws_api_gateway_method.get_method.http_method}${aws_api_gateway_resource.ec2_pricing.path}"
+  source_arn = "arn:aws:execute-api:${local.region}:${local.account_id}:${aws_api_gateway_rest_api.pricing_agw.id}/*/${aws_api_gateway_method.get_method.http_method}${aws_api_gateway_resource.ec2_pricing.path}"
 }
 
 ########################################################################################
