@@ -84,14 +84,9 @@ exports.handler = async function (event: Event, context: Context) {
 
   // final log out of pricingResponses array
   console.log("Responses:", pricingResponses);
+
+  const response = {
+    body: pricingResponses,
+  };
+  return response;
 };
-
-// Dummy event
-// const event: Event = {
-//   region: "eu-west-2",
-//   instanceType: "t3.micro",
-// };
-
-// Explicit call of handler. Uncomment when developing locally
-// and run `ts-node src/lambdas/serverless-pricing/handler.ts` to test code in handler
-//exports.handler(event)

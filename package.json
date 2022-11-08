@@ -8,7 +8,7 @@
     "start": "npm run build && node dist/index.js",
     "test": "jest --silent --coverage",
     "lint": "npx prettier --check .",
-    "lint-fix": "npx prettier --write .",
+    "lint-fix": "npx prettier --write . && cd infra/serverless && terraform fmt",
     "prebuild": "rm -rf dist",
     "build": "esbuild ./src/lambdas/serverless-pricing/handler.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/index.js && cd dist && zip -r index.zip index.js*",
     "postbuild": "cd dist && zip -r index.zip index.js*",
@@ -43,7 +43,6 @@
     "aws-lambda": "^1.0.7",
     "aws-sdk": "^2.1227.0",
     "esbuild": "^0.15.11",
-    "ipz": "^1.1.2",
     "lodash": "^4.17.21",
     "save-dev": "^0.0.1-security",
     "zip": "^1.2.0"
