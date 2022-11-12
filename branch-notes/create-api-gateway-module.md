@@ -3,18 +3,18 @@
 - Created api-gateway module to encapsulate and abstract the creation of API Gateway Resources
 - Moved terraform resources for API Gateway into api-gateway module
 - These terraform resources include:
-    - API Gateway Resource
-    - API Gateway Resource GET Method
-    - API Gateway Resource GET Integration
-    - API Gateway Resource GET Method Response
-    - API Gateway Resource GET Integration Response
-    - API Gateway Resource OPTIONS Method
-    - API Gateway Resource OPTIONS Integration
-    - API Gateway Resource OPTIONS Method Response
-    - API Gateway Resource OPTIONS Integration Response
-    - API Gateway Resource Stage
-    - API Gateway Resource Deployment
-    - Lambda Permission for API Gateway Resource
+  - API Gateway Resource
+  - API Gateway Resource GET Method
+  - API Gateway Resource GET Integration
+  - API Gateway Resource GET Method Response
+  - API Gateway Resource GET Integration Response
+  - API Gateway Resource OPTIONS Method
+  - API Gateway Resource OPTIONS Integration
+  - API Gateway Resource OPTIONS Method Response
+  - API Gateway Resource OPTIONS Integration Response
+  - API Gateway Resource Stage
+  - API Gateway Resource Deployment
+  - Lambda Permission for API Gateway Resource
 
 [ Notes ]
 
