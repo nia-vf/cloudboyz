@@ -35,11 +35,16 @@ module "lambda_function" {
 ########################################################################################
 
 #API Gateway
+resource "aws_api_gateway_rest_api" "api_gateway" {
+  name = "serveress-pricing-api-gateway"
+}
+
 module "price_api_gateway" {
   source = "./modules/api-gateway"
 
-  name          = "serverless-pricing-api-gateway"
-  resource_name = "ec2-pricing"
+  id               = aws_api_gateway_rest_api.api_gateway.id
+  root_resource_id = aws_api_gateway_rest_api.api_gateway.root_resource_id
+  resource_name    = "ec2-pricing"
 
   lambda_function_name       = module.lambda_function.lambda_function_name
   lambda_function_invoke_arn = module.lambda_function.lambda_function_invoke_arn

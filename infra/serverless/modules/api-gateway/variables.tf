@@ -1,6 +1,11 @@
-variable "name" {
-  description = "Name of the api-gateway to create"
-  type        = string
+variable "id" {
+    description = "ID of the API Gateway to create Resources for"
+    type = string
+}
+
+variable "root_resource_id" {
+  description = "Root Resource ID of the API Gateway to create Resources for"
+  type = string
 }
 
 variable "resource_name" {
