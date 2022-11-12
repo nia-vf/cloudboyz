@@ -3,68 +3,75 @@
 ########################################################################################
 
 #Lambda Function
-# module "lambda_function" {
-#   source = "terraform-aws-modules/lambda/aws"
+module "lambda_function" {
+  source = "terraform-aws-modules/lambda/aws"
 
-#   function_name = "serverless-pricing-api"
-#   description   = "Proof of concept for a serverless lambda to retrieve formatted api responses utilizing the client-pricing sdk"
-#   handler       = "index.handler"
-#   runtime       = "nodejs16.x"
+  function_name = "serverless-pricing-api"
+  description   = "Proof of concept for a serverless lambda to retrieve formatted api responses utilizing the client-pricing sdk"
+  handler       = "index.handler"
+  runtime       = "nodejs16.x"
 
-#   create_package         = false
-#   local_existing_package = "../../dist/index.zip"
+  create_package         = false
+  local_existing_package = "../../dist/index.zip"
 
-#   timeout = 60
+  timeout = 60
 
-#   attach_policy_statements = true
-#   policy_statements = {
-#     pricing = {
-#       effect    = "Allow",
-#       actions   = ["pricing:GetProducts"],
-#       resources = ["*"]
-#     },
-#   }
+  attach_policy_statements = true
+  policy_statements = {
+    pricing = {
+      effect    = "Allow",
+      actions   = ["pricing:GetProducts"],
+      resources = ["*"]
+    },
+  }
 
-#   tags = {
-#     Name = "serverless-pricing"
-#   }
-# }
+  tags = {
+    Name = "serverless-pricing"
+  }
+}
 
 # #Lambda IAM Permissions for API Gateway
-# data "aws_caller_identity" "current" {}
+data "aws_caller_identity" "current" {}
 
-# locals {
-#   account_id = data.aws_caller_identity.current.account_id
-# }
+locals {
+  account_id = data.aws_caller_identity.current.account_id
+}
 
-# output "account_id" {
-#   value = local.account_id
-# }
+output "account_id" {
+  value = local.account_id
+}
 
-# data "aws_region" "current" {}
+data "aws_region" "current" {}
 
-# locals {
-#   region = data.aws_region.current.name
-# }
+locals {
+  region = data.aws_region.current.name
+}
 
-# output "region" {
-#   value = local.region
-# }
+output "region" {
+  value = local.region
+}
 
-# resource "aws_lambda_permission" "pricing_agw_perm" {
-#   statement_id  = "AllowExecutionFromAPIGateway"
-#   action        = "lambda:InvokeFunction"
-#   function_name = module.lambda_function.lambda_function_name
-#   principal     = "apigateway.amazonaws.com"
+resource "aws_lambda_permission" "pricing_agw_perm" {
+  statement_id  = "AllowExecutionFromAPIGateway"
+  action        = "lambda:InvokeFunction"
+  function_name = module.lambda_function.lambda_function_name
+  principal     = "apigateway.amazonaws.com"
 
-#   source_arn = "arn:aws:execute-api:${local.region}:${local.account_id}:${aws_api_gateway_rest_api.pricing_agw.id}/*/${aws_api_gateway_method.get_method.http_method}${aws_api_gateway_resource.ec2_pricing.path}"
-# }
+  source_arn = "arn:aws:execute-api:${local.region}:${local.account_id}:${aws_api_gateway_rest_api.pricing_agw.id}/*/${aws_api_gateway_method.get_method.http_method}${aws_api_gateway_resource.ec2_pricing.path}"
+}
 
 # ########################################################################################
 # # API GATEWAY SETUP
 # ########################################################################################
 
 # #API Gateway
+module "price_api_gateway" {
+  source = "./modules/api-gateway"
+
+  name = "serverless-pricing-api-gateway"
+  resource_name = "ec2-pricing"
+}
+
 # resource "aws_api_gateway_rest_api" "pricing_agw" {
 #   name = "serverless-pricing-api-gateway"
 # }
@@ -233,19 +240,9 @@
 #   stage_name    = "prod"
 # }
 
-# And this is how you use a module.
-# This module can expand to include everything we create as part of setting up the gateway
-# The can be tweaked via inputs so that theres no hard coded values in the module folder
-# Everything is driven from the parameters we pass INTO the modules making them generic, reusable and useful
-
-# Very small expample that migrates the aws_api_gateway_rest_api resource
+# Very small example that migrates the aws_api_gateway_rest_api resource
 # outputs of resources can then be mapped to output.tf variables for reuse IN OTHER modules
 # or even to use outputs from other modules in THIS module.
 # This is how they tie together. I believe terraform is smart enough to resolve
 # the dependency graphs between modules/resources so they're created/updated
 # in the necessary order and available with outputs when needed by other resources/modules
-module "price_api_gateway" {
-  source = "./modules/api-gateway"
-
-  name = "serverless-pricing-api-gateway"
-}
