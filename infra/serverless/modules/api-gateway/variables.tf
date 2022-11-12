@@ -13,3 +13,8 @@ variable "lambda_function_invoke_arn" {
   description = "Invoke ARN of Lambda function to associate with API Gateway GET resource"
   type = string
 }
+
+variable "lambda_function_name" {
+  description = "Name of Lambda function to associate with API Gateway GET resource"
+  type = string
+}

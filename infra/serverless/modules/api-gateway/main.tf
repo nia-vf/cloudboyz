@@ -41,7 +41,8 @@ resource "aws_api_gateway_integration" "get_integration" {
   passthrough_behavior = "WHEN_NO_TEMPLATES"
 
   depends_on = [
-    aws_api_gateway_method.get_method, module.lambda_function
+    aws_api_gateway_method.get_method
+    #, module.lambda_function
   ]
 }
 
@@ -145,7 +146,7 @@ resource "aws_api_gateway_deployment" "pricing_agw_deploy" {
 
   triggers = {
     redeployment = sha1(jsonencode([
-      aws_api_gateway_resource.ec2_pricing.id,
+      aws_api_gateway_resource.api_gateway_resource.id,
       aws_api_gateway_method.get_method.id,
       aws_api_gateway_method.opt_method.id,
       aws_api_gateway_integration.get_integration.id,
@@ -166,4 +167,34 @@ resource "aws_api_gateway_stage" "pricing_agw_stage" {
   deployment_id = aws_api_gateway_deployment.pricing_agw_deploy.id
   rest_api_id   = aws_api_gateway_rest_api.api_gateway.id
   stage_name    = "prod"
+}
+
+#Lambda IAM Permissions for API Gateway
+data "aws_caller_identity" "current" {}
+
+locals {
+  account_id = data.aws_caller_identity.current.account_id
+}
+
+output "account_id" {
+  value = local.account_id
+}
+
+data "aws_region" "current" {}
+
+locals {
+  region = data.aws_region.current.name
+}
+
+output "region" {
+  value = local.region
+}
+
+resource "aws_lambda_permission" "pricing_agw_perm" {
+  statement_id  = "AllowExecutionFromAPIGateway"
+  action        = "lambda:InvokeFunction"
+  function_name = var.lambda_function_name
+  principal     = "apigateway.amazonaws.com"
+
+  source_arn = "arn:aws:execute-api:${local.region}:${local.account_id}:${aws_api_gateway_rest_api.api_gateway.id}/*/${aws_api_gateway_method.get_method.http_method}${aws_api_gateway_resource.api_gateway_resource.path}"
 }
