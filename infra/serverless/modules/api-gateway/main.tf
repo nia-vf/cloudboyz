@@ -1,4 +1,4 @@
 #API Gateway
-resource "aws_api_gateway_rest_api" "pricing_agw" {
-  name = "serverless-pricing-api-gateway"
+resource "aws_api_gateway_rest_api" "api_gateway" {
+  name = var.name
 }
