@@ -8,3 +8,8 @@ variable "resource_name" {
   type = string
   default = "ec2-pricing"
 }
+
+variable "lambda_function_invoke_arn" {
+  description = "Invoke ARN of Lambda function to associate with API Gateway GET resource"
+  type = string
+}

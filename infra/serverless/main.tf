@@ -68,8 +68,9 @@ resource "aws_lambda_permission" "pricing_agw_perm" {
 module "price_api_gateway" {
   source = "./modules/api-gateway"
 
-  name = "serverless-pricing-api-gateway"
+  name          = "serverless-pricing-api-gateway"
   resource_name = "ec2-pricing"
+  lambda_function_invoke_arn = module.lambda_function.lambda_function_invoke_arn
 }
 
 # resource "aws_api_gateway_rest_api" "pricing_agw" {

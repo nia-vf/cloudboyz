@@ -28,7 +28,7 @@ resource "aws_api_gateway_integration" "get_integration" {
   http_method             = aws_api_gateway_method.get_method.http_method
   integration_http_method = "POST"
   type                    = "AWS"
-  uri                     = module.lambda_function.lambda_function_invoke_arn
+  uri                     = var.lambda_function_invoke_arn
 
   request_templates = {
     "application/json" = <<MAPPING_TEMPLATE
