@@ -5,6 +5,7 @@ import _ from "lodash";
 
 //Lambda request parameters
 interface Event {
+  instanceType: string;
   region: string;
 }
 
