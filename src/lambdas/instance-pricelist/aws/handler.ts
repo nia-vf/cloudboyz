@@ -122,6 +122,8 @@ const truncateAwsInstancePricingData = (
 exports.handler = async function (event: Event, context: Context) {
   var filtersMap = new Map<string, string>();
   filtersMap.set("regionCode", event.region);
+  filtersMap.set("productFamily", "Compute Instance");
+  filtersMap.set("instanceType", event.instanceType);
 
   const pricingApi = new PricingAPI({ region: "us-east-1", maxAttempts: 2 });
   const pricingResponseArray = await pricingApi.getProducts(filtersMap);
