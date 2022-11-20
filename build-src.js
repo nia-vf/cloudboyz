@@ -49,6 +49,7 @@ function bundleAppCode(services, esBuild) {
       })
       .catch((error) => process.exit(1));
     dists.push(rootDir + "/dist" + serviceName + "/index.js");
+    console.log("'" + rootDir + "/dist" + serviceName + "/index.js'created.");
   });
   return dists;
 }
