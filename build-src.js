@@ -58,10 +58,6 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-async function waitSomeTime() {
-  await sleep(5000);
-}
-
 async function zipAppCode(esBuildOutput) {
   await sleep(5000);
   console.log("Waited 5 seconds");
