@@ -7,6 +7,8 @@ const rootDir = __dirname.replace(/\\/g, "/"); //where we see 'replace(/\\/g, "/
 const srcDirPath = rootDir + "/src/lambdas";
 const distDirPath = rootDir + "/dist";
 
+//Get list of Paths to ALL handler.ts files
+//This is a recursive function to identify ALL handler.ts files in our src/lambdas directory - as some handler.ts files in nested directories
 function getPaths(dirPath, arrayFiles) {
   var files = fs.readdirSync(dirPath);
   var arrayFiles = arrayFiles || [];
@@ -21,7 +23,7 @@ function getPaths(dirPath, arrayFiles) {
   return arrayFiles;
 }
 
-//Get list of Services
+//Get list of Services from Paths
 function getServices(paths, dirPath) {
   let services = [];
   paths.forEach((servicePath) => {
@@ -34,7 +36,6 @@ function getServices(paths, dirPath) {
 }
 
 //Bundle handler.ts files and output them in dist directory as index.js files
-//This is a recursive function to identify ALL handler.ts files in our src/lambdas directory
 function bundleAppCode(services, esBuild) {
   var dists = [];
   services.forEach((service) => {
