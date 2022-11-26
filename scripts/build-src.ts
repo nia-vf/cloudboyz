@@ -35,8 +35,8 @@ const getPaths = (
 
 // Get paths for lambdas starting with at the /<service> dir level
 const getLambdaName = (path: string, dirPath: string = srcDirPath) => {
-  const lambdaPath = path.replace(dirPath, "");
-  return `${windowsReplace(lambdaPath).split("/")[1]}`;
+  const lambdaPath = windowsReplace(path).replace(dirPath, "");
+  return `${lambdaPath.split("/")[1]}`;
 };
 
 //Bundle handler.ts files and output them in dist directory as index.js files
