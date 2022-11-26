@@ -3,48 +3,64 @@ import path from "path";
 import fs from "fs";
 import esBuild from "esbuild";
 
-// function for replacing backslashes (required when running on windows)
-const windowsReplace = (path: string) => {
+/**
+* Function that replaces file path backslashes with forward slashes (Resolves windows usage)
+* @param    {String} path Path containing backslashes
+* @return   {String}      Formatted path
+*/
+const windowsReplace = (path: string): string => {
   return path.replace(/\\/g, "/");
 };
 
 const rootDir = windowsReplace(path.join(__dirname, ".."));
 const srcDirPath = rootDir + "/src/lambdas";
-const distDirPath = rootDir + "/dist";
 
 type HandlerFilePaths = string[];
 
-//Get list of Paths to ALL handler.ts files
-//This is a recursive function to identify ALL handler.ts files in our src/lambdas directory - as some handler.ts files in nested directories
+/**
+* Function that gets a list of `full paths` to lambda handler.ts files
+* @param    {String} srcDirPath Source directory to recursively explore for handler.ts files
+* @param    {String} handlerFilePaths Array of paths to lambda handler.ts files. Passed back into the function recursively. Undefined by default
+* @return   {String}            Array of paths to lambda handler.ts files
+*/
 const getPaths = (
-  dirPath: string,
-  arrayFiles?: HandlerFilePaths
+  srcDirPath: string,
+  handlerFilePaths?: HandlerFilePaths
 ): HandlerFilePaths => {
-  const files = fs.readdirSync(dirPath);
-  let arrFiles = arrayFiles ? arrayFiles : [];
+  const files = fs.readdirSync(srcDirPath);
+  let handlerPaths = handlerFilePaths ? handlerFilePaths : [];
 
   files.forEach((file: string) => {
-    if (fs.statSync(dirPath + "/" + file).isDirectory()) {
-      arrFiles = getPaths(dirPath + "/" + file, arrFiles);
+    if (fs.statSync(srcDirPath + "/" + file).isDirectory()) {
+      handlerPaths = getPaths(srcDirPath + "/" + file, handlerPaths);
     } else {
-      arrFiles.push(path.join(dirPath, "/", file));
+      handlerPaths.push(path.join(srcDirPath, "/", file));
     }
   });
-  return arrFiles;
+  return handlerPaths;
 };
 
-// Get paths for lambdas starting with at the /<service> dir level
-const getLambdaName = (path: string, dirPath: string = srcDirPath) => {
-  const lambdaPath = windowsReplace(path).replace(dirPath, "");
+/**
+* Function to parse the lambda name from a path string
+* 
+* @param    {String} path Path string containing lambda name
+* @return   {String}      Lambda name string. E.g. `hello-world`, `hello-world/simplified`
+*/
+const getLambdaName = (path: string): string => {
+  const lambdaPath = windowsReplace(path).replace(srcDirPath, "");
   return `${lambdaPath.split("/handler.ts")[0]}`;
 };
 
-//Bundle handler.ts files and output them in dist directory as index.js files
-const bundleAppCode = (lambdaFullPaths: string[]) => {
+/**
+* Function that bundles provided typescript handler paths into minimized .js files and moves to distinct dist folder locations
+* @param    {String} lambdaPaths Array of paths to handler.ts files
+* @return   {String}             List of paths to bundles.js files in the dist folder
+*/
+const bundleAppCode = (lambdaPaths: string[]): string[] => {
   const dists: string[] = [];
-  lambdaFullPaths.forEach((lambdaFullPath: string) => {
+  lambdaPaths.forEach((lambdaFullPath: string) => {
     const lambdaName = getLambdaName(lambdaFullPath);
-    console.log(lambdaName);
+    console.log("CURRENT LAMBDA BEING BUILT", lambdaName);
     esBuild
       .build({
         entryPoints: [lambdaFullPath],
@@ -55,7 +71,7 @@ const bundleAppCode = (lambdaFullPaths: string[]) => {
         target: "es2020",
         outfile: rootDir + "/dist" + `${lambdaName}` + "/index.js",
       })
-      .catch((error: any) => process.exit(1));
+      .catch((error: Error) => process.exit(1));
     dists.push(rootDir + "/dist" + `${lambdaName}` + "/index.js");
     console.log(
       "'" + rootDir + "/dist" + `${lambdaName}` + "/index.js' created."
@@ -65,22 +81,28 @@ const bundleAppCode = (lambdaFullPaths: string[]) => {
   return dists;
 };
 
-//Wait x seconds - to allow for new dist directories to become available
-const sleep = (ms: number) => {
+/**
+* Function that pauses execution of a script
+* @param    {String} ms Amount of time in milliseconds to pause execution
+*/
+const sleep = async (ms: number) => {
   const waitTimeInSeconds = ms / 1000;
   console.log(`Waiting ${waitTimeInSeconds} seconds`);
   return new Promise((resolve) => setTimeout(resolve, ms));
 };
 
-//Zip index.js files into index.zip files
-const zipAppCode = async (esBuildOutput: string[]) => {
+/**
+* Function that zips code in the provided path list into .zip files
+* @param    {String} pathsToZip Paths containing .js code to zip
+*/
+const zipAppCode = async (pathsToZip: string[]) => {
   await sleep(3000);
   console.log(
     "Dist directory now exists. Continuing zip processing of underlying directories"
   );
 
   const zipList: string[] = [];
-  esBuildOutput.forEach((file: string) => {
+  pathsToZip.forEach((file: string) => {
     const data = fs.readFileSync(file);
     const content = data;
     const zip = new admZip();
@@ -92,8 +114,12 @@ const zipAppCode = async (esBuildOutput: string[]) => {
   console.log("List of created dist index.zip files: ", zipList);
 };
 
-console.log("ROOT DIRECTORY:", rootDir);
-const lambdaFullPaths = getPaths(srcDirPath);
-console.log("List of existing lambdas (by full dir path): ", lambdaFullPaths);
-const esBuildOutput = bundleAppCode(lambdaFullPaths);
-zipAppCode(esBuildOutput);
+const main = () => {
+  console.log("ROOT DIRECTORY:", rootDir);
+  const lambdaPaths = getPaths(srcDirPath);
+  console.log("List of existing lambda paths (handler.ts): ", lambdaPaths);
+  const esBuildOutput = bundleAppCode(lambdaPaths);
+  zipAppCode(esBuildOutput);
+}
+
+main()
