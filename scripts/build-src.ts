@@ -35,8 +35,9 @@ const getPaths = (
 
 // Get paths for lambdas starting with at the /<service> dir level
 const getLambdaName = (path: string, dirPath: string = srcDirPath) => {
+
   const lambdaPath = windowsReplace(path).replace(dirPath, "");
-  return `${lambdaPath.split("/")[1]}`;
+  return `${lambdaPath.split("/handler.ts")[0]}`;
 };
 
 //Bundle handler.ts files and output them in dist directory as index.js files
@@ -53,12 +54,12 @@ const bundleAppCode = (lambdaFullPaths: string[]) => {
         sourcemap: true,
         platform: "node",
         target: "es2020",
-        outfile: rootDir + "/dist" + `/${lambdaName}` + "/index.js",
+        outfile: rootDir + "/dist" + `${lambdaName}` + "/index.js",
       })
       .catch((error: any) => process.exit(1));
-    dists.push(rootDir + "/dist" + `/${lambdaName}` + "/index.js");
+    dists.push(rootDir + "/dist" + `${lambdaName}` + "/index.js");
     console.log(
-      "'" + rootDir + "/dist" + `/${lambdaName}` + "/index.js' created."
+      "'" + rootDir + "/dist" + `${lambdaName}` + "/index.js' created."
     );
   });
   console.log("List of created dist index.js files: ", dists);
