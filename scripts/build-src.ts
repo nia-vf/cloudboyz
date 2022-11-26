@@ -35,7 +35,6 @@ const getPaths = (
 
 // Get paths for lambdas starting with at the /<service> dir level
 const getLambdaName = (path: string, dirPath: string = srcDirPath) => {
-
   const lambdaPath = windowsReplace(path).replace(dirPath, "");
   return `${lambdaPath.split("/handler.ts")[0]}`;
 };
@@ -69,15 +68,13 @@ const bundleAppCode = (lambdaFullPaths: string[]) => {
 //Wait x seconds - to allow for new dist directories to become available
 const sleep = (ms: number) => {
   const waitTimeInSeconds = ms / 1000;
-  console.log(`Waiting ${waitTimeInSeconds} second`);
+  console.log(`Waiting ${waitTimeInSeconds} seconds`);
   return new Promise((resolve) => setTimeout(resolve, ms));
 };
 
 //Zip index.js files into index.zip files
 const zipAppCode = async (esBuildOutput: string[]) => {
-  while (!fs.existsSync(distDirPath)) {
-    await sleep(1000);
-  }
+  await sleep(3000);
   console.log(
     "Dist directory now exists. Continuing zip processing of underlying directories"
   );
