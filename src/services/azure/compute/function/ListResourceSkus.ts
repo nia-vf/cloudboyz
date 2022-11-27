@@ -1,7 +1,7 @@
 import {
-    //ResourceSku,
-    //ResourceSkuCapabilities,
-    ResourceSkus
+  //ResourceSku,
+  //ResourceSkuCapabilities,
+  ResourceSkus,
 } from "@azure/arm-compute";
 
 // let skuCapabilities: ResourceSkuCapabilities = {
@@ -14,10 +14,10 @@ import {
 //         skuCapabilities
 //     ],
 //     capacity: {
-//         default: 
+//         default:
 //     }
 // }
 
-export const getProducts = async (
-    //some stuff
-)
+export const getProducts =
+  async();
+  //some stuff

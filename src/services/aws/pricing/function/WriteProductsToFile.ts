@@ -1,4 +1,4 @@
-import { Product } from "../../../../interfaces/product";
+import { Product } from "../../../../interfaces/aws/product";
 import * as fs from "fs";
 
 const getOutputDir = (dir?: string) => (dir ? "./" + dir : "./output");
