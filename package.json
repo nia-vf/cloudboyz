@@ -40,6 +40,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-pricing": "^3.181.0",
+    "@azure/arm-compute": "^19.2.0",
     "adm-zip": "^0.5.9",
     "aws-lambda": "^1.0.7",
     "aws-sdk": "^2.1227.0",
