@@ -1,5 +1,5 @@
 import { Context } from "aws-lambda";
-import { Product } from "../../../interfaces/product";
+import { Product } from "../../../interfaces/aws/product";
 import { PricingAPI } from "../../../services/aws/pricing";
 import _ from "lodash";
 
