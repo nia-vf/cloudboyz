@@ -135,33 +135,40 @@ resource "aws_api_gateway_integration_response" "opt_int_response_200" {
   ]
 }
 
-#API Gateway Stage Deployment
-resource "aws_api_gateway_deployment" "pricing_agw_deploy" {
-  rest_api_id = var.id
-
-  triggers = {
-    redeployment = sha1(jsonencode([
-      aws_api_gateway_resource.api_gateway_resource.id,
-      aws_api_gateway_method.get_method.id,
-      aws_api_gateway_method.opt_method.id,
-      aws_api_gateway_integration.get_integration.id,
-      aws_api_gateway_integration.opt_integration.id,
-      aws_api_gateway_method_response.get_method_response_200.id,
-      aws_api_gateway_method_response.opt_method_response_200.id,
-      aws_api_gateway_integration_response.get_int_response_200.id,
-      aws_api_gateway_integration_response.opt_int_response_200.id,
-    ]))
-  }
-
-  lifecycle {
-    create_before_destroy = true
-  }
+output "resource_id" {
+  value = aws_api_gateway_resource.api_gateway_resource.id
 }
 
-resource "aws_api_gateway_stage" "pricing_agw_stage" {
-  deployment_id = aws_api_gateway_deployment.pricing_agw_deploy.id
-  rest_api_id   = var.id
-  stage_name    = "prod"
+output "get_method_id" {
+  value = aws_api_gateway_method.get_method.id
+}
+
+output "opt_method_id" {
+  value = aws_api_gateway_method.opt_method.id
+}
+
+output "get_integration_id" {
+  value = aws_api_gateway_integration.get_integration.id
+}
+
+output "opt_integration_id" {
+  value = aws_api_gateway_integration.opt_integration.id
+}
+
+output "get_method_res200_id" {
+  value = aws_api_gateway_method_response.get_method_response_200.id
+}
+
+output "opt_method_res200_id" {
+  value = aws_api_gateway_method_response.opt_method_response_200.id
+}
+
+output "get_integration_res200_id" {
+  value = aws_api_gateway_integration_response.get_int_response_200.id
+}
+
+output "opt_integration_res200_id" {
+  value = aws_api_gateway_integration_response.opt_int_response_200.id
 }
 
 #Lambda IAM Permissions for API Gateway

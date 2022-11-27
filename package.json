@@ -10,8 +10,7 @@
     "lint": "npx prettier --check .",
     "lint-fix": "npx prettier --write . && cd infra/serverless && terraform fmt",
     "prebuild": "rm -rf dist",
-    "build": "esbuild ./src/lambdas/serverless-pricing/handler.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/index.js && cd dist && zip -r index.zip index.js*",
-    "postbuild": "cd dist && zip -r index.zip index.js*",
+    "build": "ts-node scripts/build-src.ts",
     "full-release": "npm run build && cd infra/serverless && terraform apply"
   },
   "repository": {
@@ -26,6 +25,7 @@
   },
   "homepage": "https://github.com/nia-vf/cloudboyz#readme",
   "devDependencies": {
+    "@types/adm-zip": "^0.5.0",
     "@types/aws-lambda": "^8.10.107",
     "@types/jest": "^29.1.2",
     "@types/lodash": "^4.14.188",
@@ -40,9 +40,11 @@
   },
   "dependencies": {
     "@aws-sdk/client-pricing": "^3.181.0",
+    "adm-zip": "^0.5.9",
     "aws-lambda": "^1.0.7",
     "aws-sdk": "^2.1227.0",
     "esbuild": "^0.15.11",
+    "jszip": "^3.10.1",
     "lodash": "^4.17.21",
     "save-dev": "^0.0.1-security",
     "zip": "^1.2.0"
