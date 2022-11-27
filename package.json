@@ -44,9 +44,7 @@
     "aws-lambda": "^1.0.7",
     "aws-sdk": "^2.1227.0",
     "esbuild": "^0.15.11",
-    "jszip": "^3.10.1",
     "lodash": "^4.17.21",
-    "save-dev": "^0.0.1-security",
-    "zip": "^1.2.0"
+    "save-dev": "^0.0.1-security"
   }
 }
