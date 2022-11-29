@@ -1,20 +1,59 @@
-import { ClientSecretCredential, DefaultAzureCredential } from "@azure/identity";
+import {
+  ClientSecretCredential,
+  DefaultAzureCredential,
+} from "@azure/identity";
 import * as dotenv from "dotenv";
-import { ResourceSkus } from "@azure/arm-compute";
-//import { getProducts } from "./function/ListResourceSkus";
+import { ResourceSkus, ComputeManagementClient } from "@azure/arm-compute";
+import { Compute } from "aws-sdk/clients/workspaces";
+import { getProducts } from "./function/ListResourceSkus";
 
-dotenv.config({ path: __dirname + "/./../../../../.env" } );
+dotenv.config({ path: __dirname + "/./../../../../.env" });
 
 let credentials = null;
 
-const tenantId = process.env["AZURE_TENANT_ID"]
-console.log(tenantId)
-//console.log(process.env.NODE_ENV)
+interface EnvironmentVariables {
+  tenantId?: string;
+  clientId?: string;
+  clientSecret?: string;
+  subscriptionId?: string;
+}
 
-// export class ResourceSkusAPI {
+let envVariables: EnvironmentVariables = {
+  tenantId: process.env["AZURE_TENANT_ID"],
+  clientId: process.env["AZURE_CLIENT_ID"],
+  clientSecret: process.env["AZURE_CLIENT_SECRET"],
+  subscriptionId: process.env["AZURE_SUBSCRIPTION_ID"],
+};
 
+if (
+  envVariables.tenantId &&
+  envVariables.clientId &&
+  envVariables.clientSecret &&
+  envVariables.subscriptionId
+) {
+  credentials = new ClientSecretCredential(
+    envVariables.tenantId,
+    envVariables.clientId,
+    envVariables.clientSecret
+  );
 
-//   getProducts(filtersMap: Map<string, string>): Promise<ResourceSkus[]> {
-//     return getProducts(filtersMap);
-//   }
-// }
+  const client = new ComputeManagementClient(
+    credentials,
+    envVariables.subscriptionId
+  );
+
+  async function listResourceSkus() {
+    try {
+      for await (const item of client.resourceSkus.list()) {
+        const resourceSkuDetails = await client.resourceSkus.list();
+      }
+    } catch {}
+  }
+
+  // export class ResourceSkusAPI {
+
+  //   getProducts(filtersMap: Map<string, string>): Promise<ResourceSkus[]> {
+  //     return this.getProducts(filtersMap, client)
+  //   }
+  // }
+}
