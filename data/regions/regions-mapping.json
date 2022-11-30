@@ -1,0 +1,166 @@
+[
+  {
+    "regionCode": "us-virginia",
+    "regionName": "Virginia, United States",
+    "cloudProviders": [
+      {
+        "name": "aws",
+        "regionName": "(US East) (N. Virginia)",
+        "regionCode": "us-east-1"
+      },
+      {
+        "name": "azure",
+        "regionName": "Virginia (US East)",
+        "regionCode": "us-east3"
+      }
+    ]
+  },
+  {
+    "regionCode": "us-ohio",
+    "regionName": "Ohio, United States"
+  },
+  {
+    "regionCode": "us-california",
+    "regionName": "California, United States"
+  },
+  {
+    "regionCode": "us-oregon",
+    "regionName": "Oregon, United States"
+  },
+  {
+    "regionCode": "us-southcarolina",
+    "regionName": "South Carolina, United States"
+  },
+  {
+    "regionCode": "us-arizona",
+    "regionName": "Arizona, United States"
+  },
+  {
+    "regionCode": "us-wyoming",
+    "regionName": "Wyoming, United States"
+  },
+  {
+    "regionCode": "us-iowa",
+    "regionName": "Iowa, United States"
+  },
+  {
+    "regionCode": "us-texas",
+    "regionName": "Texas, United States"
+  },
+  {
+    "regionCode": "ca-toronto",
+    "regionName": "Toronto, Canada"
+  },
+  {
+    "regionCode": "ca-montreal",
+    "regionName": "Montreal, Canada"
+  },
+  {
+    "regionCode": "af-capetown",
+    "regionName": "Cape Town, South Africa"
+  },
+  {
+    "regionCode": "eastasia-hongkong",
+    "regionName": "Hong Kong, East Asia"
+  },
+  {
+    "regionCode": "eastasia-taiwan",
+    "regionName": "Taiwan, East Asia"
+  },
+  {
+    "regionCode": "southasia-hyderabad",
+    "regionName": "Hyderabad, India"
+  },
+  {
+    "regionCode": "southasia-mumbai",
+    "regionName": "Mumbai, India"
+  },
+  {
+    "regionCode": "seastasia-singapore",
+    "regionName": "Singapore, South-East Asia"
+  },
+  {
+    "regionCode": "au-sydney",
+    "regionName": "Sydney, Australia"
+  },
+  {
+    "regionCode": "au-melbourne",
+    "regionName": "Melbourne, Australia"
+  },
+  {
+    "regionCode": "seastasia-jakarta",
+    "regionName": "Jakarta, Indonesia"
+  },
+  {
+    "regionCode": "neastasia-tokyo",
+    "regionName": "Tokyo, Japan"
+  },
+  {
+    "regionCode": "neastasia-osaka",
+    "regionName": "Osaka, Japan"
+  },
+  {
+    "regionCode": "neastasia-seoul",
+    "regionName": "Seoul, Korea"
+  },
+  {
+    "regionCode": "eu-ireland",
+    "regionName": "Ireland, Europe"
+  },
+  {
+    "regionCode": "eu-london",
+    "regionName": "London, United Kingdom"
+  },
+  {
+    "regionCode": "eu-paris",
+    "regionName": "Paris, France"
+  },
+  {
+    "regionCode": "eu-belgium",
+    "regionName": "Brussels, Belgium"
+  },
+  {
+    "regionCode": "eu-sweden",
+    "regionName": "Stockholm, Sweden"
+  },
+  {
+    "regionCode": "eu-netherlands",
+    "regionName": "Amsterdam, Netherlands"
+  },
+  {
+    "regionCode": "eu-finland",
+    "regionName": "Helsinki, Finland"
+  },
+  {
+    "regionCode": "eu-italy",
+    "regionName": "Milan, Italy"
+  },
+  {
+    "regionCode": "eu-spain",
+    "regionName": "Madrid, Spain"
+  },
+  {
+    "regionCode": "mideast-uae",
+    "regionName": "Dubai, United Arab Emirates"
+  },
+  {
+    "regionCode": "mideast-bahrain",
+    "regionName": "Dammam, Bahrain"
+  },
+  {
+    "regionCode": "mideast-qatar",
+    "regionName": "Doha, Qatar"
+  },
+  {
+    "regionCode": "mideast-israel",
+    "regionName": "Tel-Aviv, Israel"
+  },
+  {
+    "regionCode": "samerica-brazil",
+    "regionName": "Sao Paulo, Brazil"
+  },
+  {
+    "regionCode": "samerica-chile",
+    "regionName": "Santiago, Chile"
+  }
+]
