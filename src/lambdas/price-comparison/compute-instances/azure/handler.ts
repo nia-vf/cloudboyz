@@ -1,4 +1,8 @@
 import { Context } from "aws-lambda";
+import {
+  SecretsManagerClient,
+  GetSecretValueCommand,
+} from "@aws-sdk/client-secrets-manager";
 import { ResourceSku, ComputeManagementClient } from "@azure/arm-compute";
 import {
   ClientSecretCredential,
@@ -73,6 +77,33 @@ interface PriceItem {
   type?: string;
   isPrimaryMeterRegion?: boolean;
   armSkuName?: string;
+}
+
+async function getCredentials() {
+  const secret_name = "prod/pricing-comparison/instance/azure-creds";
+
+  const secretsManagerClient = new SecretsManagerClient({
+    region: "eu-west-2",
+  });
+
+  let secretsResponse: any;
+
+  try {
+    secretsResponse = await secretsManagerClient.send(
+      new GetSecretValueCommand({
+        SecretId: secret_name,
+        VersionStage: "AWSCURRENT", // VersionStage defaults to AWSCURRENT if unspecified
+      })
+    );
+  } catch (error) {
+    // For a list of exceptions thrown, see
+    // https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
+    throw error;
+  }
+
+  const secret = JSON.parse(secretsResponse.SecretString);
+
+  return secret;
 }
 
 async function listResourceSkus(
@@ -206,28 +237,58 @@ function truncateAzureInstancePricingData(
 //Get Azure Compute instance prices
 exports.handler = async function (event: Event, context: Context) {
   ////Get Credentials
-  dotenv.config({ path: __dirname + "/./../../../../../.env" });
-
   let credentials: ClientSecretCredential | DefaultAzureCredential;
 
-  const tenantId: string =
-    process.env["AZURE_TENANT_ID"] || "ca37fce7-d638-4c9c-9500-3a1cbdbe0f65";
-  const clientId: string =
-    process.env["AZURE_CLIENT_ID"] || "1ab9c3ba-0623-4843-8e5c-76a582d86965";
-  const clientSecret: string =
-    process.env["AZURE_CLIENT_SECRET"] ||
-    "0L48Q~E9M0Igtrnx1pQ8pZX3I.4Le5TwMJzrrb11";
-  const subscriptionId: string =
-    process.env["AZURE_SUBSCRIPTION_ID"] ||
-    "23d1e2ae-700d-4ada-b973-82877473ed10";
-  console.log("Subscription ID: ", subscriptionId);
-  console.log("Azure Client ID: ", clientId);
+  //Check locally for Credentials in first instance
+  dotenv.config({ path: __dirname + "/./../../../../../.env" });
+  var tenantId: string | undefined = process.env["AZURE_TENANT_ID"];
+  var clientId: string | undefined = process.env["AZURE_CLIENT_ID"];
+  var clientSecret: string | undefined = process.env["AZURE_CLIENT_SECRET"];
+  var subscriptionId: string = process.env["AZURE_SUBSCRIPTION_ID"] || "";
+  console.log(subscriptionId);
 
+  //If Credentials exist locally create Azure Cred; else get Credentials from AWS Secrets Manager
   if (tenantId && clientId && clientSecret) {
     credentials = new ClientSecretCredential(tenantId, clientId, clientSecret);
   } else {
-    credentials = new DefaultAzureCredential();
+    var secretResponse = await getCredentials();
+    console.log("Secrets:", secretResponse);
+    console.log("Secrets object type:", typeof secretResponse);
+
+    var secTenantId: string = secretResponse.AZURE_TENANT_ID;
+    var secClientId: string = secretResponse.AZURE_CLIENT_ID;
+    var secClientSecret: string = secretResponse.AZURE_CLIENT_SECRET;
+    subscriptionId = secretResponse.AZURE_SUBSCRIPTION_ID;
+
+    credentials = new ClientSecretCredential(
+      secTenantId,
+      secClientId,
+      secClientSecret
+    );
   }
+
+  // dotenv.config({ path: __dirname + "/./../../../../../.env" });
+
+  // let credentials: ClientSecretCredential | DefaultAzureCredential;
+
+  // const tenantId: string =
+  //   process.env["AZURE_TENANT_ID"] || "ca37fce7-d638-4c9c-9500-3a1cbdbe0f65";
+  // const clientId: string =
+  //   process.env["AZURE_CLIENT_ID"] || "1ab9c3ba-0623-4843-8e5c-76a582d86965";
+  // const clientSecret: string =
+  //   process.env["AZURE_CLIENT_SECRET"] ||
+  //   "0L48Q~E9M0Igtrnx1pQ8pZX3I.4Le5TwMJzrrb11";
+  // const subscriptionId: string =
+  //   process.env["AZURE_SUBSCRIPTION_ID"] ||
+  //   "23d1e2ae-700d-4ada-b973-82877473ed10";
+  // console.log("Subscription ID: ", subscriptionId);
+  // console.log("Azure Client ID: ", clientId);
+
+  // if (tenantId && clientId && clientSecret) {
+  //   credentials = new ClientSecretCredential(tenantId, clientId, clientSecret);
+  // } else {
+  //   credentials = new DefaultAzureCredential();
+  // }
 
   //Get Sku Data
   var filteredSkuResponse = await listResourceSkus(
