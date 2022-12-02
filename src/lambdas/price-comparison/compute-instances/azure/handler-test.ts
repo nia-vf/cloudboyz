@@ -1,4 +1,8 @@
 import { Context } from "aws-lambda";
+import {
+  SecretsManagerClient,
+  GetSecretValueCommand,
+} from "@aws-sdk/client-secrets-manager";
 import { ResourceSku, ComputeManagementClient } from "@azure/arm-compute";
 import {
   ClientSecretCredential,
@@ -82,23 +86,40 @@ let dummyEvent: Event = {
 };
 
 //Get Credentials
-dotenv.config({ path: __dirname + "/./../../../../../.env" });
 
-let credentials: ClientSecretCredential | DefaultAzureCredential;
+//Try to get from Secrets Manager
+async function getCredentials() {
+  const secret_name = "prod/pricing-comparison/instance/azure-creds";
 
-const tenantId: string = process.env["AZURE_TENANT_ID"] || "";
-const clientId: string = process.env["AZURE_CLIENT_ID"] || "";
-const clientSecret: string = process.env["AZURE_CLIENT_SECRET"] || "";
-const subscriptionId: string = process.env["AZURE_SUBSCRIPTION_ID"] || "";
-console.log(subscriptionId);
+  const secretsManagerClient = new SecretsManagerClient({
+    region: "eu-west-2",
+  });
 
-if (tenantId && clientId && clientSecret) {
-  credentials = new ClientSecretCredential(tenantId, clientId, clientSecret);
-} else {
-  credentials = new DefaultAzureCredential();
+  let secretsResponse: any;
+
+  try {
+    secretsResponse = await secretsManagerClient.send(
+      new GetSecretValueCommand({
+        SecretId: secret_name,
+        VersionStage: "AWSCURRENT", // VersionStage defaults to AWSCURRENT if unspecified
+      })
+    );
+  } catch (error) {
+    // For a list of exceptions thrown, see
+    // https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
+    throw error;
+  }
+
+  const secret = JSON.parse(secretsResponse.SecretString);
+
+  return secret;
 }
 
-async function listResourceSkus(event: Event) {
+async function listResourceSkus(
+  event: Event,
+  credentials: ClientSecretCredential | DefaultAzureCredential,
+  subscriptionId: string
+) {
   try {
     //Use credential to authneticate with Azure SDKs
     const client = new ComputeManagementClient(credentials, subscriptionId);
@@ -179,7 +200,42 @@ async function getPrices(skuData: ResourceSku[] | undefined): Promise<Pricing> {
 }
 
 async function example() {
-  var filteredSkuResponse = await listResourceSkus(dummyEvent);
+  //Get Credentials
+  let credentials: ClientSecretCredential | DefaultAzureCredential;
+
+  //Check locally for Credentials in first instance
+  dotenv.config({ path: __dirname + "/./../../../../../.env" });
+  var tenantId: string | undefined = process.env["AZURE_TENANT_ID"];
+  var clientId: string | undefined = process.env["AZURE_CLIENT_ID"];
+  var clientSecret: string | undefined = process.env["AZURE_CLIENT_SECRET"];
+  var subscriptionId: string = process.env["AZURE_SUBSCRIPTION_ID"] || "";
+  console.log(subscriptionId);
+
+  //If Credentials exist locally create Azure Cred; else get Credentials from AWS Secrets Manager
+  if (tenantId && clientId && clientSecret) {
+    credentials = new ClientSecretCredential(tenantId, clientId, clientSecret);
+  } else {
+    var secretResponse = await getCredentials();
+    console.log("Secrets:", secretResponse);
+    console.log("Secrets object type:", typeof secretResponse);
+
+    var secTenantId: string = secretResponse.AZURE_TENANT_ID;
+    var secClientId: string = secretResponse.AZURE_CLIENT_ID;
+    var secClientSecret: string = secretResponse.AZURE_CLIENT_SECRET;
+    subscriptionId = secretResponse.AZURE_SUBSCRIPTION_ID;
+
+    credentials = new ClientSecretCredential(
+      secTenantId,
+      secClientId,
+      secClientSecret
+    );
+  }
+
+  var filteredSkuResponse = await listResourceSkus(
+    dummyEvent,
+    credentials,
+    subscriptionId
+  );
   //console.log( "Non-Promise: ", filteredSkuResponse)
 
   var skuPriceResponse = await getPrices(filteredSkuResponse);

@@ -1,9 +1,5 @@
 import { Context } from "aws-lambda";
-import {
-  ResourceSkus,
-  ResourceSku,
-  ComputeManagementClient,
-} from "@azure/arm-compute";
+import { ResourceSku, ComputeManagementClient } from "@azure/arm-compute";
 import {
   ClientSecretCredential,
   DefaultAzureCredential,
