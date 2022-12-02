@@ -1,9 +1,5 @@
 import { Context } from "aws-lambda";
-import {
-  ResourceSkus,
-  ResourceSku,
-  ComputeManagementClient,
-} from "@azure/arm-compute";
+import { ResourceSku, ComputeManagementClient } from "@azure/arm-compute";
 import {
   ClientSecretCredential,
   DefaultAzureCredential,
@@ -24,7 +20,25 @@ interface Event {
 }
 
 //Lambda response body
-//Add interface for Lambda response
+interface Cost {
+  purchaseType?: string;
+  purchaseOption?: string;
+  costPerUnit?: number;
+  termLength?: string;
+  offeringClass?: string;
+}
+
+interface Response {
+  instanceType?: string;
+  memory?: string;
+  storage?: string;
+  vcpus?: string;
+  instanceFamily?: string;
+  operatingSystem?: string;
+  regionCode?: string;
+  location?: string;
+  costs?: Cost[];
+}
 
 //Price API response
 interface Pricing {
@@ -169,30 +183,48 @@ async function example() {
   //console.log( "Non-Promise: ", filteredSkuResponse)
 
   var skuPriceResponse = await getPrices(filteredSkuResponse);
-  console.log(skuPriceResponse);
+  //console.log(skuPriceResponse);
+
+  var filteredSkuPriceData = _.reject(skuPriceResponse.Items, function (item) {
+    return (
+      _.endsWith(item.skuName, "Low Priority") ||
+      _.endsWith(item.skuName, "Spot") ||
+      _.endsWith(item.productName, "Windows")
+    );
+  });
+  console.log(_.size(filteredSkuPriceData));
+
+  var priceData: Response[] = [];
+  _.each(filteredSkuResponse, function (sku) {
+    let skuPrice = _.find(filteredSkuPriceData, function (price) {
+      return price.skuName == sku.name;
+    });
+    console.log(skuPrice);
+
+    if (skuPrice) {
+      priceData.push({
+        instanceType: skuPrice.meterName,
+        memory: dummyEvent.memory,
+        vcpus: dummyEvent.vcpus,
+        operatingSystem: "Linux",
+        regionCode: "uksouth",
+        location: "London, United Kingdom",
+        costs: [
+          {
+            purchaseType: "On Demand",
+            purchaseOption: "N/A",
+            costPerUnit: skuPrice.unitPrice,
+            termLength: "N/A",
+            offeringClass: "N/A",
+          },
+        ],
+      });
+    }
+  });
+  console.log(priceData);
+
+  return priceData;
 }
 
-example();
-
-// //Lambda response body
-// interface Cost {
-//     purchaseType?: string;
-//     purchaseOption?: string;
-//     costPerUnit?: number;
-//     termLength?: string;
-//     offeringClass?: string;
-//   }
-
-//   interface Response {
-//     instanceType?: string;
-//     memory?: string;
-//     storage?: string;
-//     vcpus?: string;
-//     networkPerformance?: string;
-//     instanceFamily?: string;
-//     operatingSystem?: string;
-//     regionCode?: string;
-//     location?: string;
-//     costs?: Cost[];
-//     normalizationSizeFactor?: string;
-//   }
+var response = example();
+console.log("Response Body: ", response);

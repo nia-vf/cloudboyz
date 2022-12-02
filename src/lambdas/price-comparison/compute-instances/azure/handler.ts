@@ -24,8 +24,26 @@ interface Event {
 }
 
 //Lambda response body
-//Add interface for Lambda response
-//Just use Pricing interface for now
+//Lambda response body
+interface Cost {
+  purchaseType?: string;
+  purchaseOption?: string;
+  costPerUnit?: number;
+  termLength?: string;
+  offeringClass?: string;
+}
+
+interface Response {
+  instanceType?: string;
+  memory?: string;
+  storage?: string;
+  vcpus?: string;
+  instanceFamily?: string;
+  operatingSystem?: string;
+  regionCode?: string;
+  location?: string;
+  costs?: Cost[];
+}
 
 //Price API response
 interface Pricing {
@@ -60,13 +78,6 @@ interface PriceItem {
   isPrimaryMeterRegion?: boolean;
   armSkuName?: string;
 }
-
-//Dummy Event
-// let dummyEvent: Event = {
-//   region: "uksouth",
-//   vcpus: "4",
-//   memory: "16",
-// };
 
 async function listResourceSkus(
   event: Event,
@@ -152,20 +163,48 @@ async function getPrices(skuData: ResourceSku[] | undefined): Promise<Pricing> {
   return skuPrice;
 }
 
-async function example(
-  event: Event,
-  credentials: ClientSecretCredential | DefaultAzureCredential,
-  subscriptionId: string
-) {
-  var filteredSkuResponse = await listResourceSkus(
-    event,
-    credentials,
-    subscriptionId
-  );
-  //console.log( "Non-Promise: ", filteredSkuResponse)
+function truncateAzureInstancePricingData(
+  skuData: ResourceSku[] | undefined,
+  priceData: Pricing,
+  event: Event
+): Response[] {
+  //Filter Price Data from Pricing API response
+  var filteredPriceData = _.reject(priceData.Items, function (item) {
+    return (
+      _.endsWith(item.skuName, "Low Priority") ||
+      _.endsWith(item.skuName, "Spot") ||
+      _.endsWith(item.productName, "Windows")
+    );
+  });
 
-  var skuPriceResponse = await getPrices(filteredSkuResponse);
-  console.log(skuPriceResponse);
+  //Build Response object from Pricing Data
+  var response: Response[] = [];
+  _.each(skuData, function (sku) {
+    let skuPrice = _.find(filteredPriceData, function (price) {
+      return price.skuName == sku.name;
+    });
+
+    if (skuPrice) {
+      response.push({
+        instanceType: skuPrice.meterName,
+        memory: event.memory,
+        vcpus: event.vcpus,
+        operatingSystem: "Linux",
+        regionCode: event.region,
+        location: "London, United Kingdom",
+        costs: [
+          {
+            purchaseType: "On Demand",
+            purchaseOption: "N/A",
+            costPerUnit: skuPrice.unitPrice,
+            termLength: "N/A",
+            offeringClass: "N/A",
+          },
+        ],
+      });
+    }
+  });
+  return response;
 }
 
 //Get Azure Compute instance prices
@@ -185,7 +224,8 @@ exports.handler = async function (event: Event, context: Context) {
   const subscriptionId: string =
     process.env["AZURE_SUBSCRIPTION_ID"] ||
     "23d1e2ae-700d-4ada-b973-82877473ed10";
-  console.log(subscriptionId);
+  console.log("Subscription ID: ", subscriptionId);
+  console.log("Azure Client ID: ", clientId);
 
   if (tenantId && clientId && clientSecret) {
     credentials = new ClientSecretCredential(tenantId, clientId, clientSecret);
@@ -193,5 +233,21 @@ exports.handler = async function (event: Event, context: Context) {
     credentials = new DefaultAzureCredential();
   }
 
-  example(event, credentials, subscriptionId);
+  //Get Sku Data
+  var filteredSkuResponse = await listResourceSkus(
+    event,
+    credentials,
+    subscriptionId
+  );
+
+  //Get Price Data for Skus
+  var skuPriceResponse = await getPrices(filteredSkuResponse);
+
+  //Truncate Price Data into Response
+  var response = truncateAzureInstancePricingData(
+    filteredSkuResponse,
+    skuPriceResponse,
+    event
+  );
+  console.log("Response:", response);
 };
