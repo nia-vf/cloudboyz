@@ -36,23 +36,24 @@ Now run this command – `az ad sp create-for-rbac --name='service_principal_nam
 
 This command will return an object with the following fields:
 
--	`appId` – this is the Service Principal Client ID
--	`displayName` – the name you gave to your Service Principal
--	`password` – this is the Service Principal Client Secret
--	`tenant` – this is the Tenant ID, and should match the `tenantId` from the previous step
+- `appId` – this is the Service Principal Client ID
+- `displayName` – the name you gave to your Service Principal
+- `password` – this is the Service Principal Client Secret
+- `tenant` – this is the Tenant ID, and should match the `tenantId` from the previous step
 
 Take note of this information as we will need it later. Our Service Principal has now been created. We can view it in the Azure Portal by navigating to ‘Azure Active Directory’ and going to the ‘App Registrations’ blade on the left navigation menu. Our Service Principal can easily be found under the ‘Owned applications’ tab.
 
 ![image](https://user-images.githubusercontent.com/102545622/205441068-63b79a41-406e-4d92-b94c-7d69b09d5b3c.png)
 
 ### Create a Custom Role with the required permissions
+
 Rather than using an OOTB Microsoft role, we want to create a Custom Role with the specific permission to list Resource SKUs. Typically, the OOTB roles provide more privileges than we need.
 
 To create a Custom Role, navigate to 'Subscriptions' from the main search bar at the top, and select the Subscription with the Subscription ID that matches the value of the id field from the azure account show command we ran earlier.
 
 ![image](https://user-images.githubusercontent.com/102545622/205441710-c8b69fa1-9066-4703-b4da-9e5a48051275.png)
 
-Under the Subscription, select the 'Access Control (IAM)'  blade from the left navigation menu. Navigate to the Roles tab, and select 'Add' to create a Custom Role.
+Under the Subscription, select the 'Access Control (IAM)' blade from the left navigation menu. Navigate to the Roles tab, and select 'Add' to create a Custom Role.
 
 ![image](https://user-images.githubusercontent.com/102545622/205442623-8e35a80f-4f33-4362-9490-6dde1e257750.png)
 
