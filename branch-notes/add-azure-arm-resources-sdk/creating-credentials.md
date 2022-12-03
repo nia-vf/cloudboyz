@@ -103,7 +103,7 @@ Now our Azure Credentials are set up. However, to use this in our code with the 
 
 To use the Credentials on our local machine, we must create a `.env` file in the root of the CloudBoyz directory. This file must contain the following 4 lines:
 
-```
+```shell
 AZURE_SUBSCRIPTION_ID="{subscriptio_id_string}"
 AZURE_TENANT_ID="{tenant_id_string}"
 AZURE_CLIENT_ID="{client_id_string}"
