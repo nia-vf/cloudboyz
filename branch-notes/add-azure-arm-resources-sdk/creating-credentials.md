@@ -14,13 +14,13 @@ To create the required Credentials, we must:
 
 1. Create a Service Principal
 2. Create a Custom Role with the required permission
-3. Create a Role Assignment
+3. Create a Role Assignment to assign the Custom Role to Service Principal
 
 ### Prequisites
 
 Before we can create our Credentials we must ensure than we have Azure Active Directory set up on the account associated with our Subscription. **Arns to insert steps in separate README**
 
-#### Create a Service Principal
+### Create a Service Principal
 
 Easiest way to create a Service Principal to use Cloud Shell from the Azure Portal or from the command line using Azure CLI. In this example, we will use Cloud Shell.
 
@@ -41,9 +41,28 @@ This command will return an object with the following fields:
 Take note of this information as we will need it later. Our Service Principal has now been created. We can view it in the Azure Portal by navigating to ‘Azure Active Directory’ and going to the ‘App Registrations’ blade on the left navigation menu. Our Service Principal can easily be found under the ‘Owned applications’ tab.
 ![image](https://user-images.githubusercontent.com/102545622/205441068-63b79a41-406e-4d92-b94c-7d69b09d5b3c.png)
 
+### Create a Custom Role with the required permissions
+Rather than using an OOTB Microsoft role, we want to create a Custom Role with the specific permission to list Resource SKUs. Typically, the OOTB roles provide more privileges than we need.
 
+To create a Custom Role, navigate to 'Subscriptions' from the main search bar at the top, and select the Subscription with the Subscription ID that matches the value of the id field from the azure account show command we ran earlier.
+![image](https://user-images.githubusercontent.com/102545622/205441710-c8b69fa1-9066-4703-b4da-9e5a48051275.png)
 
-#### 
+Under the Subscription, select the 'Access Control (IAM)'  blade from the left navigation menu. Navigate to the Roles tab, and select 'Add' to create a Custom Role.
+![image](https://user-images.githubusercontent.com/102545622/205442623-8e35a80f-4f33-4362-9490-6dde1e257750.png)
+
+From the dropdown, select 'Add custom role'.
+![image](https://user-images.githubusercontent.com/102545622/205442672-e54f9ec6-8fae-4b18-8cec-117fd88a5d49.png)
+
+Under the 'Basics' tab, give the Custom Role a name, like 'List-Resource-Skus' for example, and give it a description that makes sense, such as: 'A Role containing permissions to access the List Resource Skus API'.
+
+Under the 'Permissions' tab, click on 'Add Permissions'. This brings up a box from the right like the one we see below. Type 'Microsoft.Compute/skus/read' in the search bar. This is the permission we require.
+![image](https://user-images.githubusercontent.com/102545622/205442710-08173436-5a9c-4f49-bbdd-084156d265fb.png)
+
+Select the 'Microsoft Compute' box, and this will bring up the Skus/read permission. Check the tickbox and click 'Add' to add the permission to our Custom Role.
+![image](https://user-images.githubusercontent.com/102545622/205442724-e1200ed2-a69a-4054-8844-b3882af702a2.png)
+
+Now click on 'Review + Create' and create the Custom Role. We can view our Custom Role in the 'Access control (IAM)' blade under the 'Roles' tab.
+![image](https://user-images.githubusercontent.com/102545622/205442745-e85ede76-0f93-445f-80c6-1cf10eb5ebe9.png)
 
 ## Using Credentials Locally
 
