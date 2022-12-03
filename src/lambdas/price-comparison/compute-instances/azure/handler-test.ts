@@ -213,11 +213,13 @@ async function example() {
 
   //If Credentials exist locally create Azure Cred; else get Credentials from AWS Secrets Manager
   if (tenantId && clientId && clientSecret) {
+    console.log("Secret Found Locally");
     credentials = new ClientSecretCredential(tenantId, clientId, clientSecret);
   } else {
+    console.log("Secret Not Found Locally");
     var secretResponse = await getCredentials();
     console.log("Secrets:", secretResponse);
-    console.log("Secrets object type:", typeof secretResponse);
+    //console.log("Secrets object type:", typeof secretResponse);
 
     var secTenantId: string = secretResponse.AZURE_TENANT_ID;
     var secClientId: string = secretResponse.AZURE_CLIENT_ID;
@@ -255,7 +257,7 @@ async function example() {
     let skuPrice = _.find(filteredSkuPriceData, function (price) {
       return price.skuName == sku.name;
     });
-    console.log(skuPrice);
+    //console.log(skuPrice);
 
     if (skuPrice) {
       priceData.push({
@@ -283,4 +285,3 @@ async function example() {
 }
 
 var response = example();
-console.log("Response Body: ", response);
