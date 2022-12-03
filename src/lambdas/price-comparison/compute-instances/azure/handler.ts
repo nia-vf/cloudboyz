@@ -208,7 +208,7 @@ function truncateAzureInstancePricingData(
   var response: Response[] = [];
   _.each(skuData, function (sku) {
     let skuPrice = _.find(filteredPriceData, function (price) {
-      return price.skuName == sku.name;
+      return price.armSkuName == sku.name;
     });
 
     if (skuPrice) {

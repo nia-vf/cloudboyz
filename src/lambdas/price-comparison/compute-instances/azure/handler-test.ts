@@ -255,9 +255,9 @@ async function example() {
   var priceData: Response[] = [];
   _.each(filteredSkuResponse, function (sku) {
     let skuPrice = _.find(filteredSkuPriceData, function (price) {
-      return price.skuName == sku.name;
+      return price.armSkuName == sku.name;
     });
-    //console.log(skuPrice);
+    console.log(sku.name, skuPrice);
 
     if (skuPrice) {
       priceData.push({
