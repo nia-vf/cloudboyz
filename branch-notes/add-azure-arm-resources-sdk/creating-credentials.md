@@ -100,4 +100,20 @@ Now our Azure Credentials are set up. However, to use this in our code with the 
 
 ## Using Credentials Locally
 
+To use the Credentials on our local machine, we must create a `.env` file in the root of the CloudBoyz directory. This file must contain the following 4 lines:
+
+`AZURE_SUBSCRIPTION_ID="{subscriptio_id_string}"
+AZURE_TENANT_ID="{tenant_id_string}"
+AZURE_CLIENT_ID="{client_id_string}"
+AZURE_CLIENT_SECRET="{client_secret_string}"`
+
+Where:
+
+- AZURE_SUBSCRIPTION_ID is the Subscription ID string we created our Role and Role Assignment in (this is the `id` from the `az account show` step)
+- AZURE_TENANT_ID is the Tenant ID string for the Service Principal we created (`tenant` field)
+- AZURE_CLIENT_ID is the Client ID string for the Service Principal we created (`appId` field)
+- AZURE_CLIENT_SECRET is the Client Secret string for the Service Principal we created (`password` field)
+
 ## Using Credentials via Lambda
+
+In progress
