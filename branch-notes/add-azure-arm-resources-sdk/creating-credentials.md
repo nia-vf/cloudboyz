@@ -117,6 +117,26 @@ Where:
 - AZURE_CLIENT_ID is the Client ID string for the Service Principal we created (`appId` field)
 - AZURE_CLIENT_SECRET is the Client Secret string for the Service Principal we created (`password` field)
 
-## Using Credentials via Lambda
+## Using Credentials Remotely
 
-In progress
+We will also want to use the Credentials remotely (i.e., on our applications hosted in AWS), not just in Production, but for Development too. To use the Credentials remotely in our applications hosted in the Cloud, we must create a Secret in AWS Secrets Manager in the account and region associated with our application.
+
+To create a Secret, navigate to Secrets Manager in the AWS Console using the search bar at the top. In Secrets Manager, select 'Store a new secret'.
+
+Under 'Step 1 - Choose a secret type', we first want to select the Secret type. Choose 'Other type of secret' as shown in the image below. We must then add 4 key/value pairs that match what we put in our local `.env` file above:
+
+![image](https://user-images.githubusercontent.com/102545622/205488887-7985dfa2-b070-4f3a-9bea-fd3578a95a72.png)
+
+Click 'Next'.
+
+Under 'Step 2 - Configure secret', we will give the secret a name and description. The name MUST be 'prod/pricing-comparison/instance/azure-creds', and the description can optionally be added as in the example below: 
+
+![image](https://user-images.githubusercontent.com/102545622/205489232-15ef4fc5-e6d8-43ca-a204-7f8189b0bea5.png)
+
+No further configuration is required for Step 3 and 4, so we can go ahead and press 'Next' and then review and create the secret by clicking on 'Store'.
+
+### Secrets Manager Permissions for Lambda
+
+In this example, our Lambda function will be using this Secret, therefore we must not forget to give the function the appropriate permissions to access the Secret. The following permissions must be added the Lambda Execution Role:
+
+- `secretsmanager:GetSecretValue`
