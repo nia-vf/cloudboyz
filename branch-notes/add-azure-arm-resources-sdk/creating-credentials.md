@@ -129,7 +129,7 @@ Under 'Step 1 - Choose a secret type', we first want to select the Secret type. 
 
 Click 'Next'.
 
-Under 'Step 2 - Configure secret', we will give the secret a name and description. The name MUST be 'prod/pricing-comparison/instance/azure-creds', and the description can optionally be added as in the example below: 
+Under 'Step 2 - Configure secret', we will give the secret a name and description. The name MUST be 'prod/pricing-comparison/instance/azure-creds', and the description can optionally be added as in the example below:
 
 ![image](https://user-images.githubusercontent.com/102545622/205489232-15ef4fc5-e6d8-43ca-a204-7f8189b0bea5.png)
 
