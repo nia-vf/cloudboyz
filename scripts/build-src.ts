@@ -40,9 +40,9 @@ const getPaths = (
   });
 
   //Filter for only handlerPaths ending handler.ts
-  let filteredHandlerPaths = _.filter(handlerPaths, function(path){
-    return _.endsWith( path, "\\handler.ts" )
-  })
+  let filteredHandlerPaths = _.filter(handlerPaths, function (path) {
+    return _.endsWith(path, "\\handler.ts");
+  });
   return filteredHandlerPaths;
 };
 

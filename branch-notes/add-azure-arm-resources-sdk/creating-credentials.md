@@ -18,7 +18,7 @@ To create the required Credentials, we must:
 
 ### Prequisites
 
-Before we can create our Credentials we must ensure than we have Azure Active Directory set up on the account associated with our Subscription. **Arns to insert steps in separate README**
+Before we can create our Credentials we must ensure than we have Azure Active Directory set up on the account associated with our Subscription.
 
 ### Create a Service Principal
 
