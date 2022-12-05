@@ -267,29 +267,6 @@ exports.handler = async function (event: Event, context: Context) {
     );
   }
 
-  // dotenv.config({ path: __dirname + "/./../../../../../.env" });
-
-  // let credentials: ClientSecretCredential | DefaultAzureCredential;
-
-  // const tenantId: string =
-  //   process.env["AZURE_TENANT_ID"] || "ca37fce7-d638-4c9c-9500-3a1cbdbe0f65";
-  // const clientId: string =
-  //   process.env["AZURE_CLIENT_ID"] || "1ab9c3ba-0623-4843-8e5c-76a582d86965";
-  // const clientSecret: string =
-  //   process.env["AZURE_CLIENT_SECRET"] ||
-  //   "0L48Q~E9M0Igtrnx1pQ8pZX3I.4Le5TwMJzrrb11";
-  // const subscriptionId: string =
-  //   process.env["AZURE_SUBSCRIPTION_ID"] ||
-  //   "23d1e2ae-700d-4ada-b973-82877473ed10";
-  // console.log("Subscription ID: ", subscriptionId);
-  // console.log("Azure Client ID: ", clientId);
-
-  // if (tenantId && clientId && clientSecret) {
-  //   credentials = new ClientSecretCredential(tenantId, clientId, clientSecret);
-  // } else {
-  //   credentials = new DefaultAzureCredential();
-  // }
-
   //Get Sku Data
   var filteredSkuResponse = await listResourceSkus(
     event,
