@@ -8,7 +8,7 @@ To get information about a Virtual Machine instance’s size, memory capacity, v
 
 ## How to set up Credentials to call get Resource SKU Details
 
-The List Resource SKUs API retrieves a list of Compute SKUs available for a Subscription. Because this data is tied to a Subscription, firstly you’ll need to create a subscription in Azure, and secondly you will need to create credentials tied to this subscription.
+The List Resource SKUs API retrieves a list of Compute SKUs available for a Subscription. Because this data is tied to a Subscription, firstly we will need to create a subscription in Azure, and secondly we will need to create credentials tied to this subscription.
 
 To create the required Credentials, we must:
 
@@ -41,7 +41,7 @@ This command will return an object with the following fields:
 - `password` – this is the Service Principal Client Secret
 - `tenant` – this is the Tenant ID, and should match the `tenantId` from the previous step
 
-Take note of this information as we will need it later. Our Service Principal has now been created. We can view it in the Azure Portal by navigating to ‘Azure Active Directory’ and going to the ‘App Registrations’ blade on the left navigation menu. Our Service Principal can easily be found under the ‘Owned applications’ tab.
+Take note of this information as we will need it later. Our Service Principal has now been created. We can view it in the Azure Portal by navigating to 'Azure Active Directory' and going to the 'App Registrations' blade on the left navigation menu. Our Service Principal can easily be found under the ‘Owned applications’ tab.
 
 ![image](https://user-images.githubusercontent.com/102545622/205441068-63b79a41-406e-4d92-b94c-7d69b09d5b3c.png)
 
@@ -49,7 +49,7 @@ Take note of this information as we will need it later. Our Service Principal ha
 
 Rather than using an OOTB Microsoft role, we want to create a Custom Role with the specific permission to list Resource SKUs. Typically, the OOTB roles provide more privileges than we need.
 
-To create a Custom Role, navigate to 'Subscriptions' from the main search bar at the top, and select the Subscription with the Subscription ID that matches the value of the id field from the azure account show command we ran earlier.
+To create a Custom Role, navigate to 'Subscriptions' from the main search bar at the top, and select the Subscription with the Subscription ID that matches the value of the `id` field from the `azure account show` command we ran earlier.
 
 ![image](https://user-images.githubusercontent.com/102545622/205441710-c8b69fa1-9066-4703-b4da-9e5a48051275.png)
 
