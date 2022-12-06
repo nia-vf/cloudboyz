@@ -1,6 +1,7 @@
 import { CloudCatalogClient } from "@google-cloud/billing";
 import { google } from "@google-cloud/billing/build/protos/protos";
 import _ from "lodash";
+import * as apiResponse from "../../../../../data/gcloud/gcloud-compute-instances-pricing.json";
 
 //Lambda response body
 interface Cost {
@@ -35,19 +36,23 @@ const request: google.cloud.billing.v1.IListSkusRequest = {
 };
 
 async function callListSkus(request: google.cloud.billing.v1.IListSkusRequest) {
-  let iterable = await catalogClient.listSkusAsync(request, {
-    autoPaginate: false,
-  });
-  let i = 0;
+  var skusList: any = [];
 
-  var skusList = [];
+  if (apiResponse) {
+    skusList = apiResponse;
+  } else {
+    let iterable = await catalogClient.listSkusAsync(request, {
+      autoPaginate: false,
+    });
 
-  for await (const response of iterable) {
-    console.log(response);
-    console.log(i);
-    i++;
+    let i = 0;
+    for await (const response of iterable) {
+      console.log(response);
+      console.log(i);
+      i++;
 
-    skusList.push(response);
+      skusList.push(response);
+    }
   }
 
   return skusList;
@@ -58,6 +63,7 @@ function truncateSkusList(skusList: google.cloud.billing.v1.ISku[]) {
     return (
       sku.category?.resourceFamily == "Compute" &&
       sku.category?.usageType == "OnDemand" &&
+      sku.category?.resourceGroup == "N1Standard" &&
       _.includes(sku.serviceRegions, "europe-west2")
     );
   });
