@@ -126,52 +126,60 @@ function truncateSkusList(
   machineTypes: GoogleCompute.cloud.compute.v1.IMachineType[],
   skusList: GoogleBilling.cloud.billing.v1.ISku[]
 ) {
-
-  var priceData: Response[] = []
-  _.each(machineTypes, function(machine){
-    var machineTypeName = machine.name?.split("-")[0].toUpperCase()
+  var priceData: Response[] = [];
+  _.each(machineTypes, function (machine) {
+    var machineTypeName = machine.name?.split("-")[0].toUpperCase();
 
     //Filter Skus for only specified Machine Type
     var matchingSku = _.filter(skusList, function (sku) {
-      let skuName = sku.description?.split(" ")[0].toUpperCase()
+      let skuName = sku.description?.split(" ")[0].toUpperCase();
       return (
-        skuName == machineTypeName &&
-        !(_.includes(sku.description, "Custom"))
+        skuName == machineTypeName && !_.includes(sku.description, "Custom")
       );
     });
     //console.log(matchingSku)
 
     //Get Price for Machine Type (only if SKU exists for Region)
-    if(_.size(matchingSku) > 1 ){
-      
+    if (_.size(matchingSku) > 1) {
       var totalPrice = 0;
-      _.each(matchingSku, function(sku){
-        let unitAmount = 0                        //unit amount is how many vcpus/ram in gb
-        if(sku.category?.resourceGroup == "CPU"){
-          unitAmount = Number(event.vcpus)
-        } else if(sku.category?.resourceGroup == "RAM"){
-          unitAmount = Number(event.memory)
+      _.each(matchingSku, function (sku) {
+        let unitAmount = 0; //unit amount is how many vcpus/ram in gb
+        if (sku.category?.resourceGroup == "CPU") {
+          unitAmount = Number(event.vcpus);
+        } else if (sku.category?.resourceGroup == "RAM") {
+          unitAmount = Number(event.memory);
         }
-  
-        _.each(sku.pricingInfo, function(info){
+
+        _.each(sku.pricingInfo, function (info) {
           //Check data for calculations exist
-          let displayQuantity = 1
-          if (info.pricingExpression?.displayQuantity){
-            displayQuantity = info.pricingExpression?.displayQuantity
+          let displayQuantity = 1;
+          if (info.pricingExpression?.displayQuantity) {
+            displayQuantity = info.pricingExpression?.displayQuantity;
           }
-          let unitPrice = 0, unitPriceNano = 0
-          if (info.pricingExpression?.tieredRates){
-            unitPrice = Number(info.pricingExpression?.tieredRates[0].unitPrice?.units)
-            unitPriceNano = Number(info.pricingExpression?.tieredRates[0].unitPrice?.nanos)
+          let unitPrice = 0,
+            unitPriceNano = 0;
+          if (info.pricingExpression?.tieredRates) {
+            unitPrice = Number(
+              info.pricingExpression?.tieredRates[0].unitPrice?.units
+            );
+            unitPriceNano = Number(
+              info.pricingExpression?.tieredRates[0].unitPrice?.nanos
+            );
           }
-  
-          var componentPrice = displayQuantity * unitAmount * (unitPrice + (unitPriceNano / 1000000000))
-          console.log(machineTypeName + " " + sku.category?.resourceGroup + " Price: ", componentPrice)
+
+          var componentPrice =
+            displayQuantity *
+            unitAmount *
+            (unitPrice + unitPriceNano / 1000000000);
+          console.log(
+            machineTypeName + " " + sku.category?.resourceGroup + " Price: ",
+            componentPrice
+          );
           totalPrice += componentPrice;
-        })
-      })
-  
-      console.log(machineTypeName + " Price: ", totalPrice)
+        });
+      });
+
+      console.log(machineTypeName + " Price: ", totalPrice);
 
       priceData.push({
         instanceType: machine.name,
@@ -186,13 +194,13 @@ function truncateSkusList(
             purchaseOption: "N/A",
             costPerUnit: totalPrice,
             termLength: "N/A",
-            offeringClass: "N/A"
-          }
-        ]
-      })
+            offeringClass: "N/A",
+          },
+        ],
+      });
     }
-  })
-  console.log(priceData)
+  });
+  console.log(priceData);
 
   return priceData;
 }
