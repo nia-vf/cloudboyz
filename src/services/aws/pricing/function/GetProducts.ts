@@ -7,7 +7,7 @@ import {
   PricingPaginationConfiguration,
 } from "@aws-sdk/client-pricing";
 import { client } from "..";
-import { Product } from "../../../../interfaces/product";
+import { Product } from "../../../../interfaces/aws/product";
 
 const createFilters = (filtersMap: Map<string, string>) => {
   let filters: Filter[] = [];

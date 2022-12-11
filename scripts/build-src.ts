@@ -2,6 +2,7 @@ import admZip from "adm-zip";
 import path from "path";
 import fs from "fs";
 import esBuild from "esbuild";
+import _ from "lodash";
 
 /**
  * Function that replaces file path backslashes with forward slashes (Resolves windows usage)
@@ -37,7 +38,12 @@ const getPaths = (
       handlerPaths.push(path.join(srcDirPath, "/", file));
     }
   });
-  return handlerPaths;
+
+  //Filter for only handlerPaths ending handler.ts
+  let filteredHandlerPaths = _.filter(handlerPaths, function (path) {
+    return _.endsWith(path, "\\handler.ts");
+  });
+  return filteredHandlerPaths;
 };
 
 /**
