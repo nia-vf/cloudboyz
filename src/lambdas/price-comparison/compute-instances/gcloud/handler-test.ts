@@ -1,9 +1,13 @@
+import {
+  SecretsManagerClient,
+  GetSecretValueCommand,
+} from "@aws-sdk/client-secrets-manager";
 import { CloudCatalogClient } from "@google-cloud/billing";
 import { google as GoogleBilling } from "@google-cloud/billing/build/protos/protos";
 import { google as GoogleCompute } from "@google-cloud/compute/build/protos/protos";
 import { MachineTypesClient } from "@google-cloud/compute";
 import _ from "lodash";
-import * as apiResponse from "../../../../../data/gcloud/gcloud-compute-instances-pricing.json";
+import * as apiResponse from "../../../../../data/gcloud/gcloud-compute-instances-pricgiting.json";
 import { machine } from "os";
 
 //Lambda request parameters
@@ -44,6 +48,8 @@ let dummyEvent: Event = {
   vcpus: "4",
   memory: "16",
 };
+
+//Get Credentials
 
 //Get list of Machine Types
 async function callListMachineTypes(event: Event) {
