@@ -21,6 +21,7 @@ coverage
 
 # API keys and secrets
 .env
+service-account-key.json
 
 # Dependency directory
 node_modules
@@ -37,7 +38,7 @@ Thumbs.db
 # Ignore built ts files
 dist/**/*
 
-# ignore yarn.lock
+# Ignore yarn.lock
 yarn.lock
 
 # output directory
