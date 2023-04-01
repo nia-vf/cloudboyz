@@ -7,7 +7,7 @@ import { google as GoogleBilling } from "@google-cloud/billing/build/protos/prot
 import { google as GoogleCompute } from "@google-cloud/compute/build/protos/protos";
 import { MachineTypesClient } from "@google-cloud/compute";
 import _ from "lodash";
-import * as apiResponse from "../../../../../data/gcloud/gcloud-compute-instances-pricgiting.json";
+import * as apiResponse from "../../../../../data/gcloud/gcloud-compute-instances-pricing.json";
 import { machine } from "os";
 
 //Lambda request parameters
@@ -50,11 +50,52 @@ let dummyEvent: Event = {
 };
 
 //Get Credentials
+async function getCredentials(){
+  const secret_name = "prod/pricing-comparison/instance/gclod-creds"
+
+  const secretsManagerClient = new SecretsManagerClient({
+    region: "eu-west-2"
+  })
+
+  let secretsResponse: any;
+
+  let machineTypesClient = new MachineTypesClient()
+
+  try {
+    secretsResponse = await secretsManagerClient.send(
+      new GetSecretValueCommand({
+        SecretId: secret_name,
+        VersionStage: "AWSCURRENT", // VersionStage defaults to AWSCURRENT if unspecified
+      })
+    );
+
+    const secret = JSON.parse(secretsResponse.SecretString);
+    console.log("Secret: ", secret)
+
+    machineTypesClient = new MachineTypesClient({
+      keyFilename: secret.private_key
+    });
+
+  } catch (error) {
+    try {
+      machineTypesClient = new MachineTypesClient({
+        keyFilename: "../../../../../service-account-key.json"
+      });
+
+    } catch (error) {
+      throw error;
+    }
+    // For a list of exceptions thrown, see
+    // https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
+    //throw error;
+  }
+}
 
 //Get list of Machine Types
 async function callListMachineTypes(event: Event) {
   //Create Client for Machine Types API
-  let machineTypesClient = new MachineTypesClient();
+  let machineTypesClient = new MachineTypesClient(
+  );
 
   //Create Request Parameters
   const machineTypeRequest: GoogleCompute.cloud.compute.v1.IListMachineTypesRequest =
@@ -212,12 +253,13 @@ function truncateSkusList(
 }
 
 async function handlerExample() {
-  var machineTypeResponse = await callListMachineTypes(dummyEvent);
-  console.log(machineTypeResponse);
-  var skusList = await callListSkus(dummyEvent);
-  //console.log(skusList)
-  console.log(_.size(skusList));
-  truncateSkusList(dummyEvent, machineTypeResponse, skusList);
+  var secretResponse = await getCredentials()
+  // var machineTypeResponse = await callListMachineTypes(dummyEvent);
+  // console.log(machineTypeResponse);
+  // var skusList = await callListSkus(dummyEvent);
+  // //console.log(skusList)
+  // console.log(_.size(skusList));
+  // truncateSkusList(dummyEvent, machineTypeResponse, skusList);
 }
 
 handlerExample();
