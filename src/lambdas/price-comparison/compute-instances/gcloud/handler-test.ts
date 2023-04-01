@@ -50,16 +50,16 @@ let dummyEvent: Event = {
 };
 
 //Get Credentials
-async function getCredentials(){
-  const secret_name = "prod/pricing-comparison/instance/gcloud-creds"
+async function getCredentials() {
+  const secret_name = "prod/pricing-comparison/instance/gcloud-creds";
 
   const secretsManagerClient = new SecretsManagerClient({
-    region: "eu-west-2"
-  })
+    region: "eu-west-2",
+  });
 
   let secretsResponse: any;
 
-  let machineTypesClient = new MachineTypesClient()
+  let machineTypesClient = new MachineTypesClient();
 
   try {
     secretsResponse = await secretsManagerClient.send(
@@ -70,18 +70,16 @@ async function getCredentials(){
     );
 
     const secret = JSON.parse(secretsResponse.SecretString);
-    console.log("Secret: ", secret)
+    console.log("Secret: ", secret);
 
     machineTypesClient = new MachineTypesClient({
-      keyFilename: secret.private_key
+      keyFilename: secret.private_key,
     });
-
   } catch (error) {
     try {
       machineTypesClient = new MachineTypesClient({
-        keyFilename: "../../../../../service-account-key.json"
+        keyFilename: "../../../../../service-account-key.json",
       });
-
     } catch (error) {
       throw error;
     }
@@ -94,8 +92,7 @@ async function getCredentials(){
 //Get list of Machine Types
 async function callListMachineTypes(event: Event) {
   //Create Client for Machine Types API
-  let machineTypesClient = new MachineTypesClient(
-  );
+  let machineTypesClient = new MachineTypesClient();
 
   //Create Request Parameters
   const machineTypeRequest: GoogleCompute.cloud.compute.v1.IListMachineTypesRequest =
@@ -253,7 +250,7 @@ function truncateSkusList(
 }
 
 async function handlerExample() {
-  var secretResponse = await getCredentials()
+  var secretResponse = await getCredentials();
   // var machineTypeResponse = await callListMachineTypes(dummyEvent);
   // console.log(machineTypeResponse);
   // var skusList = await callListSkus(dummyEvent);
