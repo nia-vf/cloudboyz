@@ -7,7 +7,7 @@ import { google as GoogleBilling } from "@google-cloud/billing/build/protos/prot
 import { google as GoogleCompute } from "@google-cloud/compute/build/protos/protos";
 import { MachineTypesClient } from "@google-cloud/compute";
 import _ from "lodash";
-import * as apiResponse from "../../../../../data/gcloud/gcloud-compute-instances-pricing.json";
+import * as apiResponse from "../../../../data/gcloud/gcloud-compute-instances-pricing.json";
 import { machine } from "os";
 
 //Lambda request parameters
@@ -51,7 +51,7 @@ let dummyEvent: Event = {
 
 //Get Credentials
 async function getCredentials(){
-  const secret_name = "prod/pricing-comparison/instance/gclod-creds"
+  const secret_name = "prod/pricing-comparison/instance/gcloud-creds"
 
   const secretsManagerClient = new SecretsManagerClient({
     region: "eu-west-2"
