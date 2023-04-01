@@ -1,5 +1,5 @@
 import { PricingClient, PricingClientConfig } from "@aws-sdk/client-pricing";
-import { Product } from "../../../interfaces/product";
+import { Product } from "../../../interfaces/aws/product";
 import { getProducts } from "./function/GetProducts";
 
 export class PricingAPI {
